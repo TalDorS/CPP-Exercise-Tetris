@@ -1,10 +1,12 @@
 #ifndef __TETROMINO_H
 #define __TETROMINO_H
 
+#define NUMBER_OF_COORDINATES 4
+
 class Tetromino
 {
-	int xCoordinates[4];
-	int yCoordinates[4];
+	int xCoordinates[NUMBER_OF_COORDINATES];
+	int yCoordinates[NUMBER_OF_COORDINATES];
 	bool isMoving = false;
 	int shape;
 public:

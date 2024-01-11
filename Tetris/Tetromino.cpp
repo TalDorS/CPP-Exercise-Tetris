@@ -1,16 +1,23 @@
 #include "Tetromino.h"
 
+#define DEFAULT_VALUE 0
+#define NUM_OF_COORDINATES 4
+#define FIRST 0
+#define SECOND 1
+#define THIRD 2
+#define FOURTH 3
+
 void Tetromino::setXCoordinates(int x1, int x2, int x3, int x4) {
-	xCoordinates[0] = x1;
-	xCoordinates[1] = x2;
-	xCoordinates[2] = x3;
-	xCoordinates[3] = x4;
+	xCoordinates[FIRST] = x1;
+	xCoordinates[SECOND] = x2;
+	xCoordinates[THIRD] = x3;
+	xCoordinates[FOURTH] = x4;
 }
 void Tetromino::setYCoordinates(int y1, int y2, int y3, int y4) {
-	yCoordinates[0] = y1;
-	yCoordinates[1] = y2;
-	yCoordinates[2] = y3;
-	yCoordinates[3] = y4;
+	yCoordinates[FIRST] = y1;
+	yCoordinates[SECOND] = y2;
+	yCoordinates[THIRD] = y3;
+	yCoordinates[FOURTH] = y4;
 }
 
 void Tetromino::setShape(int shape) {
@@ -26,7 +33,7 @@ int* Tetromino::getYCoordinates() {
 }
 
 bool Tetromino::isContainCoordinates(int y, int x) {
-	for (int i = 0; i < 4; i++) {
+	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
 		if (xCoordinates[i] == x && yCoordinates[i] == y)
 			return true;
 	}
