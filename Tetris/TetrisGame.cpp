@@ -10,6 +10,7 @@
 #define PLAYER2 1
 #define ABORT -1
 #define START_GAME '1'
+#define CONTINUE_GAME '2'
 #define SHOW_INSTRUCTIONS '8'
 #define EXIT_GAME '9'
 
@@ -43,7 +44,7 @@ void TetrisGame::game() {
 }
 
 char TetrisGame::showMenu() {
-	char keyPressed = 0;
+	char keyPressed = DEFAULT_VALUE;
 
 	clearScreen();
 
@@ -59,7 +60,7 @@ char TetrisGame::showMenu() {
 		if (_kbhit()) {
 			keyPressed = getKeyFromUser();
 
-			if (keyPressed == '1' || (keyPressed == '2' && isGameOn) || keyPressed == '8' || keyPressed == '9')
+			if (keyPressed == START_GAME || (keyPressed == CONTINUE_GAME && isGameOn) || keyPressed == SHOW_INSTRUCTIONS || keyPressed == EXIT_GAME)
 				break;
 		}			
 	}
@@ -136,8 +137,8 @@ void TetrisGame::initGame() {
 
 		// Pull tetrominos down every 2 seconds
 
-		boards[PLAYER1].dropTetromino();
-		boards[PLAYER2].dropTetromino();
+		boards[PLAYER1].moveTetrominoDown();
+		boards[PLAYER2].moveTetrominoDown();
 
 		// Check for key press and navigate to the right function
 		if (_kbhit())
@@ -154,7 +155,6 @@ void TetrisGame::initGame() {
 				// Perform movement action
 				if (playerPressed == PLAYER1 || playerPressed == PLAYER2) {
 					boards[playerPressed].performAction(keyPressed, playerPressed);
-					cout.flush();
 				}
 			}
 		}

@@ -3,6 +3,5 @@
 #include "Board.h"
 
 int main() {
-	TetrisGame mainGame;
-	mainGame.game();
+	TetrisGame().game();
 }

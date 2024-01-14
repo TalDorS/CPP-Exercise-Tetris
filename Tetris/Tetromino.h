@@ -6,7 +6,7 @@
 class Tetromino
 {
 	int xCoordinates[NUMBER_OF_COORDINATES];
-	int yCoordinates[NUMBER_OF_COORDINATES];
+	int yCoordinates[NUMBER_OF_COORDINATES]; 
 	bool isMoving = false;
 	int shape;
 public:
@@ -23,7 +23,7 @@ public:
 	int* getYCoordinates();
 	bool getIsMoving();
 
-	// This function checks if both x and y coordinate is in its arrays
+	// This method checks if both x and y coordinate is in its arrays
 	bool isContainCoordinates(int x, int y);
 };
 

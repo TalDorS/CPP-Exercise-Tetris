@@ -30,14 +30,8 @@ void Board::printBoard(int x, int y) {
 	gotoxy(GameConfig::FIRST_BOARD_X + 18, GameConfig::FIRST_BOARD_Y - 2);
 	cout << "TETRIS";
 
-	// Add tetromino to board
-	int* xCoordinates = currentTetromino.getXCoordinates();
-	int* yCoordinates = currentTetromino.getYCoordinates();
-
 	// Print tetromino characters
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		gameBoard[yCoordinates[i]][xCoordinates[i]] = GameConfig::TETRINOM_CHAR;
-	}
+	printTetromino();
 
 	// Print board
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++) {
@@ -204,7 +198,6 @@ void Board::performAction(char keyPressed, int playerNumber) {
 		case 'M':
 			dropTetromino();
 			break;
-
 		default:
 			break;
 		}
@@ -304,20 +297,15 @@ void Board::dropTetromino() {
 	int* xCoordinates = currentTetromino.getXCoordinates();
 	int* yCoordinates = currentTetromino.getYCoordinates();
 
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		if (gameBoard[yCoordinates[i] + 1][xCoordinates[i]] != ' ') {
-			// Collision with right border or another block, do not move
-			if(!currentTetromino.isContainCoordinates(yCoordinates[i] + 1, xCoordinates[i]))
-				return;
+	while (spaceBelowTetromino()) {
+		// Drop tetromino
+		for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+			currentTetromino.setYCoordinate(i, yCoordinates[i] + 1);
 		}
 	}
-	// Clear filled rows
-	clearBlocks();
 
-	// Drop tetromino
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		currentTetromino.setYCoordinate(i, yCoordinates[i] + 1);
-	}
+
+	printTetromino();
 }
 
 void Board::clearBlocks() {
@@ -330,10 +318,11 @@ void Board::clearBlocks() {
 }
 
 void Board::removeFullLines() {
-	for (int y = DEFAULT_VALUE; y < GameConfig::GAME_HEIGHT; y++) {
+	for (int y = DEFAULT_VALUE + 1; y < GameConfig::GAME_HEIGHT - 1; y++) {
 		// If a line is full and no tetromino is moving, delete the line
 		if (isLineFull(y) && !currentTetromino.getIsMoving()) {
 			makeLineEmpty(y);
+			moveEverythingDown(y);
 		}
 	}
 }
@@ -351,5 +340,46 @@ void Board::makeLineEmpty(int y) {
 	for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
 		if (gameBoard[y][x] != GameConfig::BOARD_BORDER_CHAR)
 			gameBoard[y][x] = ' ';
+	}
+}
+
+void Board::moveTetrominoDown() {
+	int* xCoordinates = currentTetromino.getXCoordinates();
+	int* yCoordinates = currentTetromino.getYCoordinates();
+
+	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+		if (gameBoard[yCoordinates[i] + 1][xCoordinates[i]] != ' ') {
+			// Collision with right border or another block, do not move
+			if (!currentTetromino.isContainCoordinates(yCoordinates[i] + 1, xCoordinates[i]))
+				return;
+		}
+	}
+	// Clear filled rows
+	clearBlocks();
+
+	// move tetromino down
+	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+		currentTetromino.setYCoordinate(i, yCoordinates[i] + 1);
+	}
+}
+
+void Board::printTetromino() {
+	// Add tetromino to board
+	int* xCoordinates = currentTetromino.getXCoordinates();
+	int* yCoordinates = currentTetromino.getYCoordinates();
+
+	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+		gameBoard[yCoordinates[i]][xCoordinates[i]] = GameConfig::TETRINOM_CHAR;
+	}
+}
+
+void Board::moveEverythingDown(int y) {
+	for (y = y-1; y > 1; y--) {
+		for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
+			if (gameBoard[y][x] == GameConfig::TETRINOM_CHAR) {
+				gameBoard[y + 1][x] = GameConfig::TETRINOM_CHAR;
+				gameBoard[y][x] = ' ';
+			}
+		}
 	}
 }
