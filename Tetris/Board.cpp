@@ -2,6 +2,7 @@
 #include "General.h"
 #include "GameConfig.h"
 #include <iostream>
+#include <Windows.h>
 
 #define DEFAULT_VALUE 0
 #define NUM_OF_COORDINATES 4
@@ -29,6 +30,8 @@ void Board::printBoard(int x, int y) {
 	// Print message above the boards
 	gotoxy(GameConfig::FIRST_BOARD_X + 18, GameConfig::FIRST_BOARD_Y - 2);
 	cout << "TETRIS";
+
+	printScore(x, y);
 
 	// Print tetromino characters
 	printTetromino();
@@ -323,6 +326,8 @@ void Board::removeFullLines() {
 		if (isLineFull(y) && !currentTetromino.getIsMoving()) {
 			makeLineEmpty(y);
 			moveEverythingDown(y);
+			//************************************************************YARDEN**************************
+			updateScoreOfPlayer(10);
 		}
 	}
 }
@@ -382,4 +387,47 @@ void Board::moveEverythingDown(int y) {
 			}
 		}
 	}
+}
+
+
+//****************************************************YARDEN*****************
+bool Board::isPlayerLost()
+{
+	for (int i = 0; i < GameConfig::GAME_WIDTH; i++)
+	{
+		if (gameBoard[1][i] == GameConfig::TETRINOM_CHAR)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void Board::setScores()
+{
+	score= 0;
+}
+
+int Board::getScore()
+{
+	return score;
+}
+
+int Board::updateScoreOfPlayer(int num)
+{
+	return score+num;
+}
+
+void Board::printScore(int x, int y)
+{
+	gotoxy(x - 4, y - 1);
+	if (x == GameConfig::FIRST_BOARD_X)
+	{
+		cout << "Score of player #1: " << getScore();
+	}
+	else
+	{
+		cout << "Score of player #2: " << getScore();
+	}
+
 }

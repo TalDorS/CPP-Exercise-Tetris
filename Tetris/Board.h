@@ -4,11 +4,14 @@
 #include "Tetromino.h"
 #include "GameConfig.h"
 
+#define NUM_OF_PLAYERS 2
+
 // This class controls the players' board and everything that is going on inside it
 class Board
 {
 	Tetromino currentTetromino;
 	char gameBoard[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH];
+	int score;
 
 public:
 	// This method initalizes a board, with a border and empty interior
@@ -53,6 +56,17 @@ public:
 
 	// This method moves everything that is above a y value down
 	void moveEverythingDown(int y);
+
+	//*****************************************YARDEN**************************************
+	bool isPlayerLost();
+
+	void setScores();
+
+	int getScore();
+
+	int updateScoreOfPlayer(int num);
+	
+	void printScore(int x, int y);
 };
 
 #endif

@@ -13,34 +13,43 @@
 #define CONTINUE_GAME '2'
 #define SHOW_INSTRUCTIONS '8'
 #define EXIT_GAME '9'
+#define ESC 27
 
 using namespace std;
 
 void TetrisGame::game() {
 	char keyPressed = DEFAULT_VALUE;
 
-	while (true) {
-		// Show menu and get key input
-		keyPressed = showMenu();
+	// Show menu and get key input
+	keyPressed = showMenu();
 
+	
+	
 		// Move the user to the next section according to his decision
 		switch (keyPressed)
 		{
-		// Player pressed start game key
+			// Player pressed start game key
 		case START_GAME:
+			isGameOn = false;
 			initGame();
 			break;
-			// ************** TODO: Continue game *****************
+			/********************************************************************************YARDEN********************************************************/
+		case CONTINUE_GAME:
+			initGame();
+			break;
+			/********************************************************************************YARDEN********************************************************/
 		// Player pressed show instructions key
 		case SHOW_INSTRUCTIONS:
 			showInstructions();
 			break;
-		// Player pressed exit game key
+			// Player pressed exit game key
 		case EXIT_GAME:
+			clearScreen();
 			return;
 			break;
 		}
-	}
+	
+	
 }
 
 char TetrisGame::showMenu() {
@@ -108,23 +117,46 @@ void TetrisGame::showInstructions() {
 void TetrisGame::initGame() {
 	char keyPressed = DEFAULT_VALUE;
 	int playerPressed = DEFAULT_VALUE;
-	isGameOn = true;
+
+	/********************************************************************************YARDEN********************************************************/
+	boards[PLAYER1].setScores();
+	boards[PLAYER2].setScores();
+	/********************************************************************************YARDEN********************************************************/
+
 
 	clearScreen();
 
-	// Initialize player boards
-	boards[PLAYER1].initBoard();
-	boards[PLAYER2].initBoard();
+	/********************************************************************************YARDEN********************************************************/
+	if (isGameOn == false) {
+		// Initialize player boards
+		boards[PLAYER1].initBoard();
+		boards[PLAYER2].initBoard();
+	}
+
+	isGameOn = true;
+	/********************************************************************************YARDEN********************************************************/
+
 
 	while (true) {
+
+
 		// Add new tetrominos to players if their tetrominos are not moving
-		if (!boards[PLAYER1].isTetrominoMoving()) {
-			boards[PLAYER1].removeFullLines();
-			boards[PLAYER1].addTetromino();
+		if (!boards[PLAYER1].isTetrominoMoving())
+		{
+			if (!boards[PLAYER1].isPlayerLost())
+			{
+				boards[PLAYER1].removeFullLines();
+				boards[PLAYER1].addTetromino();
+			}
 		}
-		if (!boards[PLAYER2].isTetrominoMoving()) {
-			boards[PLAYER2].removeFullLines();
-			boards[PLAYER2].addTetromino();
+
+		if (!boards[PLAYER2].isTetrominoMoving())
+		{
+			if (!boards[PLAYER2].isPlayerLost())
+			{
+				boards[PLAYER2].removeFullLines();
+				boards[PLAYER2].addTetromino();
+			}
 		}
 
 		// Print players' boards
@@ -146,6 +178,15 @@ void TetrisGame::initGame() {
 			// Get key pressed
 			keyPressed = _getch();
 
+			/********************************************************************************YARDEN********************************************************/
+			if (keyPressed == ESC)
+			{
+				game();
+				break;
+			}
+			/********************************************************************************YARDEN********************************************************/
+
+
 			// Check who pressed the key
 			playerPressed = whoPressed(keyPressed);
 
@@ -157,6 +198,14 @@ void TetrisGame::initGame() {
 					boards[playerPressed].performAction(keyPressed, playerPressed);
 				}
 			}
+		}
+
+		if (boards[PLAYER1].isPlayerLost() && boards[PLAYER2].isPlayerLost())
+		{
+			isGameOn = false;
+			clearScreen();
+			showMenu();
+			break;
 		}
 
 		// Put delay for humans
