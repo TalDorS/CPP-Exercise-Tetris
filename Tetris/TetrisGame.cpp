@@ -1,3 +1,5 @@
+#pragma warning (disable:4996)
+
 #include <Windows.h>
 #include <iostream>
 #include <conio.h>
@@ -118,11 +120,6 @@ void TetrisGame::initGame() {
 	char keyPressed = DEFAULT_VALUE;
 	int playerPressed = DEFAULT_VALUE;
 
-	/********************************************************************************YARDEN********************************************************/
-	boards[PLAYER1].setScores();
-	boards[PLAYER2].setScores();
-	/********************************************************************************YARDEN********************************************************/
-
 
 	clearScreen();
 
@@ -131,6 +128,11 @@ void TetrisGame::initGame() {
 		// Initialize player boards
 		boards[PLAYER1].initBoard();
 		boards[PLAYER2].initBoard();
+
+		boards[PLAYER1].setScores();
+		boards[PLAYER2].setScores();
+
+
 	}
 
 	isGameOn = true;
@@ -144,7 +146,8 @@ void TetrisGame::initGame() {
 		if (!boards[PLAYER1].isTetrominoMoving())
 		{
 			if (!boards[PLAYER1].isPlayerLost())
-			{
+			{   
+				boards[PLAYER1].updateScoreOfPlayer(1);
 				boards[PLAYER1].removeFullLines();
 				boards[PLAYER1].addTetromino();
 			}
@@ -154,6 +157,7 @@ void TetrisGame::initGame() {
 		{
 			if (!boards[PLAYER2].isPlayerLost())
 			{
+				boards[PLAYER2].updateScoreOfPlayer(1);
 				boards[PLAYER2].removeFullLines();
 				boards[PLAYER2].addTetromino();
 			}
@@ -202,9 +206,7 @@ void TetrisGame::initGame() {
 
 		if (boards[PLAYER1].isPlayerLost() && boards[PLAYER2].isPlayerLost())
 		{
-			isGameOn = false;
-			clearScreen();
-			showMenu();
+			endGame();
 			break;
 		}
 
@@ -222,4 +224,38 @@ int TetrisGame::whoPressed(char keyPressed) {
 		return PLAYER2;
 
 	return ABORT;
+}
+
+
+void TetrisGame::endGame()
+{
+	isGameOn = false;
+	clearScreen();
+
+	if (boards[PLAYER1].getScore() > boards[PLAYER2].getScore())
+	{
+		cout << "The Winner is player #1 with the score: " << boards[PLAYER1].getScore() << endl;
+	}
+	else if (boards[PLAYER1].getScore() < boards[PLAYER2].getScore())
+	{
+		cout << "The Winner is player #2 with the score: " << boards[PLAYER2].getScore() << endl;
+	}
+	else
+	{
+		cout << "A tie between the players with the score: " << boards[PLAYER1].getScore() << endl;
+	}
+
+	cout << endl << "press any ket to return to the menu";
+
+	flushall();
+	
+	while (true)
+	{
+		if (_kbhit())
+		{
+			game();
+			break;
+		}
+	}
+
 }

@@ -32,6 +32,9 @@ public:
 	// This method gets a key pressed and returns the player number that is relevant to it
 	int whoPressed(char keyPressed);
 	
+
+	//*************************************************************************************************************************
+	void endGame();
 };
 
 #endif

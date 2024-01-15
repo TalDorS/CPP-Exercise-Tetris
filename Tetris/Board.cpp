@@ -413,9 +413,9 @@ int Board::getScore()
 	return score;
 }
 
-int Board::updateScoreOfPlayer(int num)
+void Board::updateScoreOfPlayer(int num)
 {
-	return score+num;
+	 score+=num;
 }
 
 void Board::printScore(int x, int y)

@@ -64,7 +64,7 @@ public:
 
 	int getScore();
 
-	int updateScoreOfPlayer(int num);
+	void updateScoreOfPlayer(int num);
 	
 	void printScore(int x, int y);
 };
