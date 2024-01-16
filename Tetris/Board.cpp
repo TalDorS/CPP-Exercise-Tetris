@@ -389,6 +389,9 @@ void Board::moveEverythingDown(int y) {
 	}
 }
 
+Tetromino Board::getCurrentTetromino() {
+	return currentTetromino;
+}
 
 //****************************************************YARDEN*****************
 bool Board::isPlayerLost()

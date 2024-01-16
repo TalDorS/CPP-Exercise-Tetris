@@ -137,7 +137,8 @@ void TetrisGame::initGame() {
 		boards[PLAYER1].setScores();
 		boards[PLAYER2].setScores();
 
-
+		boards[PLAYER1].addTetromino();
+		boards[PLAYER2].addTetromino();
 	}
 
 	isGameOn = true;

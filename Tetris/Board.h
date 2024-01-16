@@ -57,6 +57,9 @@ public:
 	// This method moves everything that is above a y value down
 	void moveEverythingDown(int y);
 
+	// This method gets the current tetromino
+	Tetromino getCurrentTetromino();
+
 	//*****************************************YARDEN**************************************
 	//This method checks if the player has lost
 	bool isPlayerLost();
