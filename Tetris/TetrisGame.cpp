@@ -210,7 +210,7 @@ void TetrisGame::initGame() {
 			}
 		}
 
-		if (boards[PLAYER1].isPlayerLost() && boards[PLAYER2].isPlayerLost())
+		if (boards[PLAYER1].isPlayerLost() || boards[PLAYER2].isPlayerLost())
 		{
 			endGame();
 			break;
@@ -238,18 +238,32 @@ void TetrisGame::endGame()
 	isGameOn = false;
 	clearScreen();
 
-	if (boards[PLAYER1].getScore() > boards[PLAYER2].getScore())
+	// if both of the players lost in the same time the winner is the one with the higher score
+	if (boards[PLAYER1].isPlayerLost() && boards[PLAYER2].isPlayerLost())
+	{
+		if (boards[PLAYER1].getScore() > boards[PLAYER2].getScore())
+		{
+			cout << "The Winner is player #1 with the score: " << boards[PLAYER1].getScore() << endl;
+		}
+		else if (boards[PLAYER1].getScore() < boards[PLAYER2].getScore())
+		{
+			cout << "The Winner is player #2 with the score: " << boards[PLAYER2].getScore() << endl;
+		}
+		else
+		{
+			cout << "A tie between the players with the score: " << boards[PLAYER1].getScore() << endl;
+		}
+	}
+	else if (boards[PLAYER2].isPlayerLost())
 	{
 		cout << "The Winner is player #1 with the score: " << boards[PLAYER1].getScore() << endl;
 	}
-	else if (boards[PLAYER1].getScore() < boards[PLAYER2].getScore())
-	{
-		cout << "The Winner is player #2 with the score: " << boards[PLAYER2].getScore() << endl;
-	}
 	else
 	{
-		cout << "A tie between the players with the score: " << boards[PLAYER1].getScore() << endl;
+		cout << "The Winner is player #2 with the score: " << boards[PLAYER2].getScore() << endl;
+
 	}
+
 
 	cout << endl << "press any ket to return to the menu";
 
