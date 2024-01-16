@@ -58,14 +58,16 @@ public:
 	void moveEverythingDown(int y);
 
 	//*****************************************YARDEN**************************************
+	//This method checks if the player has lost
 	bool isPlayerLost();
 
+	// The following methods:
+	//dealing with each player's score, (Initializing the score to 0, accessing the current score and updating the score)
 	void setScores();
-
 	int getScore();
-
 	void updateScoreOfPlayer(int num);
 	
+	//This method prints the player's score in the relevant place on the screen
 	void printScore(int x, int y);
 };
 

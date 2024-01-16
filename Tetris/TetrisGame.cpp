@@ -6,6 +6,7 @@
 #include "TetrisGame.h"
 #include "General.h"
 #include "GameConfig.h"
+#include "Tetromino.h"
 
 #define DEFAULT_VALUE 0
 #define PLAYER1 0
@@ -93,7 +94,7 @@ void TetrisGame::showInstructions() {
 
 	cout << "Game Objective:" << endl << endl;
 
-	cout << "Arrange the falling Tetrominos (tetris blocks) so that no empty space remains." << endl;
+	cout << "Arrange the falling c (tetris blocks) so that no empty space remains." << endl;
 	cout << "The goal is to prevent the stack of Tetrominos from reaching the top of the playing field." << endl;
 	cout << "The first player whose Tetrominos reach the top layer, lose the game!" << endl;
 	cout << "In case of both players reaching the top layer at the same time, the user who has the most points will win." << endl << endl;
@@ -105,6 +106,10 @@ void TetrisGame::showInstructions() {
 	cout << "* Rotate Clockwise: s or S for Left Player, k or K for Right Player" << endl;
 	cout << "* Rotate Counterclockwise: w or W for Left Player, i or I for Right Player" << endl;
 	cout << "* Drop: x or X for Left Player, m or M for Right Player" << endl << endl;
+
+	cout << "Scoring method:" << endl;
+	cout << "For eachTetromino entered to the board the player receives 1 point." << endl;
+	cout << "For each row dropped, the  player receives 10 points" << endl << endl;
 
 	cout << "Have Fun and Good Luck!" << endl << endl;
 
