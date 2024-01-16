@@ -12,7 +12,7 @@ public:
 	static constexpr int GAME_HEIGHT = 18;
 	static constexpr int GAME_TIME = 300;
 	static constexpr char BOARD_BORDER_CHAR = '@';
-	static constexpr char TETRINOM_CHAR = '#';
+	static constexpr char TETROMINO_CHAR = '#';
 	static constexpr char FIRST_BOARD_X = 30;
 	static constexpr char FIRST_BOARD_Y = 5;
 	static constexpr char SECOND_BOARD_X = 60;

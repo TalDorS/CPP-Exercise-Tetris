@@ -10,6 +10,7 @@
 #define PLAYER2 1
 #define CLOCKWISE 1
 #define COUNTERCLOCKWISE -1
+#define SECOND_POINT 1
 
 using namespace std;
 
@@ -92,14 +93,12 @@ void Board::addTetromino() {
 }
 
 bool Board::spaceBelowTetromino() {
-	int* xCoordinates = currentTetromino.getXCoordinates();
-	int* yCoordinates = currentTetromino.getYCoordinates();
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
 
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		x = xCoordinates[i];
-		y = yCoordinates[i];
+		x = currentTetromino.getXCoordinate(i);
+		y = currentTetromino.getYCoordinate(i);
 
 		// If the board has a character below a certain tetromino coordinate, and also it's not
 		// the tetromino's character, return false and set tetromino to stop moving.
@@ -213,15 +212,18 @@ bool Board::isTetrominoMoving() {
 }
 
 void Board::turnTetrominoLeft() {
-	int* xCoordinates = currentTetromino.getXCoordinates();
-	int* yCoordinates = currentTetromino.getYCoordinates();
+	int x = DEFAULT_VALUE;
+	int y = DEFAULT_VALUE;
 
 	// Check for collision
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		if (gameBoard[yCoordinates[i]][xCoordinates[i] - 1] != ' ') {
+		x = currentTetromino.getXCoordinate(i);
+		y = currentTetromino.getYCoordinate(i);
+
+		if (gameBoard[y][x - 1] != ' ') {
 			// Collision with right border or another block, do not move
 			// Also check if an not empty block is part of the tetromino
-			if (!currentTetromino.isContainCoordinates(yCoordinates[i], xCoordinates[i] - 1))
+			if (!currentTetromino.isContainCoordinates(y, x - 1))
 				return;
 		}
 	}
@@ -231,20 +233,25 @@ void Board::turnTetrominoLeft() {
 
 	// Move left
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		currentTetromino.setXCoordinate(i, xCoordinates[i] - 1);
+		x = currentTetromino.getXCoordinate(i);
+
+		currentTetromino.setXCoordinate(i, x - 1);
 	}
 }
 
 void Board::turnTetrominoRight() {
-	int* xCoordinates = currentTetromino.getXCoordinates();
-	int* yCoordinates = currentTetromino.getYCoordinates();
+	int x = DEFAULT_VALUE;
+	int y = DEFAULT_VALUE;
 
 	// Check for collision
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		if (gameBoard[yCoordinates[i]][xCoordinates[i] + 1] != ' ') {
+		x = currentTetromino.getXCoordinate(i);
+		y = currentTetromino.getYCoordinate(i);
+
+		if (gameBoard[y][x + 1] != ' ') {
 			// Collision with right border or another block, do not move
 			// Also check if an not empty block is part of the tetromino
-			if (!currentTetromino.isContainCoordinates(yCoordinates[i], xCoordinates[i] + 1))
+			if (!currentTetromino.isContainCoordinates(y, x + 1))
 				return;
 		}
 	}
@@ -254,37 +261,45 @@ void Board::turnTetrominoRight() {
 
 	// Move right
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		currentTetromino.setXCoordinate(i, xCoordinates[i] + 1);
+		x = currentTetromino.getXCoordinate(i);
+
+		currentTetromino.setXCoordinate(i, x + 1);
 	}
 }
 
 void Board::turnTetrominoClockwise(int num) {
-	int* xCoordinates = currentTetromino.getXCoordinates();
-	int* yCoordinates = currentTetromino.getYCoordinates();
+	int x = DEFAULT_VALUE, xSecond = currentTetromino.getXCoordinate(SECOND_POINT);
+	int y = DEFAULT_VALUE, ySecond = currentTetromino.getYCoordinate(SECOND_POINT);
 
 	Tetromino rotatedTetromino = currentTetromino;
 
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		int relativeX = xCoordinates[i] - xCoordinates[1];
-		int relativeY = yCoordinates[i] - yCoordinates[1];
+		// Fetch the x and y coordinates of the current point
+		x = currentTetromino.getXCoordinate(i);
+		y = currentTetromino.getYCoordinate(i);
+		
+		// Get the relative x and y values of the current point to the second point in the shape
+		int relativeX = x - xSecond;
+		int relativeY = y - ySecond;
 
 		// rotate clockwise or counterclockwise according to user's decision
 		int newX = num * -relativeY;
 		int newY = num * relativeX;
 
 		// Update rotated tetromino coordinates
-		rotatedTetromino.setXCoordinate(i, xCoordinates[1] + newX);
-		rotatedTetromino.setYCoordinate(i, yCoordinates[1] + newY);
+		rotatedTetromino.setXCoordinate(i, xSecond + newX);
+		rotatedTetromino.setYCoordinate(i, ySecond + newY);
 	}
 
 	clearBlocks();
 
-	int* newxCoordinates = rotatedTetromino.getXCoordinates();
-	int* newyCoordinates = rotatedTetromino.getYCoordinates();
-
 	// Check for collision
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		if (gameBoard[newyCoordinates[i]][newxCoordinates[i] + 1] != ' ') {
+		// Fetch the x and y coordinates of the new point
+		x = rotatedTetromino.getXCoordinate(i);
+		y = rotatedTetromino.getYCoordinate(i);
+
+		if (gameBoard[y][x + 1] != ' ') {
 			// Collision with right border or another block, do not move
 			// Also check if an not empty block is part of the tetromino
 			// if (!currentTetromino.isContainCoordinates(yCoordinates[i], xCoordinates[i] + 1))
@@ -297,13 +312,14 @@ void Board::turnTetrominoClockwise(int num) {
 }
 
 void Board::dropTetromino() {
-	int* xCoordinates = currentTetromino.getXCoordinates();
-	int* yCoordinates = currentTetromino.getYCoordinates();
+	int y = DEFAULT_VALUE;
 
 	while (spaceBelowTetromino()) {
 		// Drop tetromino
 		for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-			currentTetromino.setYCoordinate(i, yCoordinates[i] + 1);
+			y = currentTetromino.getYCoordinate(i);
+
+			currentTetromino.setYCoordinate(i, y + 1);
 		}
 	}
 
@@ -312,11 +328,14 @@ void Board::dropTetromino() {
 }
 
 void Board::clearBlocks() {
-	int* xCoordinates = currentTetromino.getXCoordinates();
-	int* yCoordinates = currentTetromino.getYCoordinates();
+	int x = DEFAULT_VALUE;
+	int y = DEFAULT_VALUE;
 
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		gameBoard[yCoordinates[i]][xCoordinates[i]] = ' ';
+		x = currentTetromino.getXCoordinate(i);
+		y = currentTetromino.getYCoordinate(i);
+
+		gameBoard[y][x] = ' ';
 	}
 }
 
@@ -349,13 +368,16 @@ void Board::makeLineEmpty(int y) {
 }
 
 void Board::moveTetrominoDown() {
-	int* xCoordinates = currentTetromino.getXCoordinates();
-	int* yCoordinates = currentTetromino.getYCoordinates();
+	int x = DEFAULT_VALUE;
+	int y = DEFAULT_VALUE;
 
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		if (gameBoard[yCoordinates[i] + 1][xCoordinates[i]] != ' ') {
+		x = currentTetromino.getXCoordinate(i);
+		y = currentTetromino.getYCoordinate(i);
+
+		if (gameBoard[y + 1][x] != ' ') {
 			// Collision with right border or another block, do not move
-			if (!currentTetromino.isContainCoordinates(yCoordinates[i] + 1, xCoordinates[i]))
+			if (!currentTetromino.isContainCoordinates(y + 1, x))
 				return;
 		}
 	}
@@ -364,25 +386,31 @@ void Board::moveTetrominoDown() {
 
 	// move tetromino down
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		currentTetromino.setYCoordinate(i, yCoordinates[i] + 1);
+		x = currentTetromino.getXCoordinate(i);
+		y = currentTetromino.getYCoordinate(i);
+
+		currentTetromino.setYCoordinate(i, y + 1);
 	}
 }
 
 void Board::printTetromino() {
 	// Add tetromino to board
-	int* xCoordinates = currentTetromino.getXCoordinates();
-	int* yCoordinates = currentTetromino.getYCoordinates();
+	int x = DEFAULT_VALUE;
+	int y = DEFAULT_VALUE;
 
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
-		gameBoard[yCoordinates[i]][xCoordinates[i]] = GameConfig::TETRINOM_CHAR;
+		x = currentTetromino.getXCoordinate(i);
+		y = currentTetromino.getYCoordinate(i);
+
+		gameBoard[y][x] = GameConfig::TETROMINO_CHAR;
 	}
 }
 
 void Board::moveEverythingDown(int y) {
 	for (y = y-1; y > 1; y--) {
 		for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
-			if (gameBoard[y][x] == GameConfig::TETRINOM_CHAR) {
-				gameBoard[y + 1][x] = GameConfig::TETRINOM_CHAR;
+			if (gameBoard[y][x] == GameConfig::TETROMINO_CHAR) {
+				gameBoard[y + 1][x] = GameConfig::TETROMINO_CHAR;
 				gameBoard[y][x] = ' ';
 			}
 		}
@@ -398,7 +426,7 @@ bool Board::isPlayerLost()
 {
 	for (int i = 0; i < GameConfig::GAME_WIDTH; i++)
 	{
-		if (gameBoard[1][i] == GameConfig::TETRINOM_CHAR)
+		if (gameBoard[1][i] == GameConfig::TETROMINO_CHAR && !currentTetromino.getIsMoving())
 		{
 			return true;
 		}

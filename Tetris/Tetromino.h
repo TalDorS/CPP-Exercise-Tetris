@@ -1,12 +1,13 @@
 #ifndef __TETROMINO_H
 #define __TETROMINO_H
 
-#define NUMBER_OF_COORDINATES 4
+#include "Point.h"
+
+#define NUMBER_OF_POINTS 4
 
 class Tetromino
 {
-	int xCoordinates[NUMBER_OF_COORDINATES];
-	int yCoordinates[NUMBER_OF_COORDINATES]; 
+	Point points[NUMBER_OF_POINTS];
 	bool isMoving = false;
 	int shape;
 public:
@@ -19,8 +20,8 @@ public:
 	void setShape(int shape);
 
 	// Get Methods
-	int* getXCoordinates();
-	int* getYCoordinates();
+	int getXCoordinate(int index);
+	int getYCoordinate(int index);
 	bool getIsMoving();
 
 	// This method checks if both x and y coordinate is in its arrays

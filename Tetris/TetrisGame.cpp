@@ -264,15 +264,16 @@ void TetrisGame::endGame()
 
 	}
 
+	cout << endl << "Press any key to return to the menu";
 
-	cout << endl << "press any ket to return to the menu";
-
-	flushall();
+	//flushall();
 	
 	while (true)
 	{
 		if (_kbhit())
 		{
+			// Tal: - Added _getch because it was causing bugs in the menu
+			getch();
 			game();
 			break;
 		}
