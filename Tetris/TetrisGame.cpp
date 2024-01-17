@@ -16,6 +16,7 @@
 #define CONTINUE_GAME '2'
 #define SHOW_INSTRUCTIONS '8'
 #define EXIT_GAME '9'
+#define RETURN_TO_MENU '0'
 #define ESC 27
 
 using namespace std;
@@ -59,6 +60,10 @@ char TetrisGame::showMenu() {
 	char keyPressed = DEFAULT_VALUE;
 
 	clearScreen();
+
+	std::cout << "******************************" << std::endl;
+	std::cout << "*        TETRIS GAME         *" << std::endl;
+	std::cout << "******************************" << std::endl;
 
 	// Present menu to user
 	cout << "(1) Start a new game" << endl;
@@ -108,14 +113,14 @@ void TetrisGame::showInstructions() {
 	cout << "* Drop: x or X for Left Player, m or M for Right Player" << endl << endl;
 
 	cout << "Scoring method:" << endl;
-	cout << "For eachTetromino entered to the board the player receives 1 point." << endl;
+	cout << "For each Tetromino entered to the board the player receives 1 point." << endl;
 	cout << "For each row dropped, the  player receives 10 points" << endl << endl;
 
 	cout << "Have Fun and Good Luck!" << endl << endl;
 
 	cout << "Press (0) to return to the main menu";
 
-	while (keyPressed != '0')
+	while (keyPressed != RETURN_TO_MENU)
 		keyPressed = getKeyFromUser();
 
 	game();

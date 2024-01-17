@@ -29,9 +29,10 @@ void Board::initBoard() {
 
 void Board::printBoard(int x, int y) {
 	// Print message above the boards
-	gotoxy(GameConfig::FIRST_BOARD_X + 18, GameConfig::FIRST_BOARD_Y - 2);
+	gotoxy(GameConfig::TETRIS_MSG_X, GameConfig::TETRIS_MSG_Y);
 	cout << "TETRIS";
 
+	// Print players' scores
 	printScore(x, y);
 
 	// Print tetromino characters
