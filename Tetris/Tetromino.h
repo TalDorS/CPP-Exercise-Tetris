@@ -10,6 +10,8 @@ class Tetromino
 	Point points[NUMBER_OF_POINTS];
 	bool isMoving = false;
 	int shape;
+
+
 public:
 	// Set Methods
 	void setXCoordinates(int x1, int x2, int x3, int x4);
@@ -26,6 +28,8 @@ public:
 
 	// This method checks if both x and y coordinate is in its arrays
 	bool isContainCoordinates(int x, int y);
+
+
 };
 
 #endif

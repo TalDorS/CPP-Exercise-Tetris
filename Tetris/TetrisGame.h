@@ -10,6 +10,8 @@ class TetrisGame
 {
 	Board boards[NUM_OF_BOARDS];
 	bool isGameOn = false;
+	bool isColor;
+
 public:
 	// This is the main method of the game,
 	//from here we control the flow of the game with the help of the menu
@@ -30,6 +32,14 @@ public:
 	//***************************************************************YARDEN**********************************************************
 	//This method summarizes the game, announces the winner and returns to the main menu.
 	void endGame();
+
+	//This method presents the user with the option to play with colors and get the user's choice
+	void playWithColor();
+
+	void setIsColor(bool state);
+
+	bool getIsColor();
+	
 };
 
 #endif

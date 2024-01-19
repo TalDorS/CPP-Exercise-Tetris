@@ -7,6 +7,7 @@
 #include "General.h"
 #include "GameConfig.h"
 #include "Tetromino.h"
+#include "Board.h"
 
 #define DEFAULT_VALUE 0
 #define PLAYER1 0
@@ -27,7 +28,6 @@ void TetrisGame::game() {
 	// Show menu and get key input
 	keyPressed = showMenu();
 
-	
 	
 		// Move the user to the next section according to his decision
 		switch (keyPressed)
@@ -130,6 +130,7 @@ void TetrisGame::initGame() {
 	char keyPressed = DEFAULT_VALUE;
 	int playerPressed = DEFAULT_VALUE;
 
+	playWithColor();
 
 	clearScreen();
 
@@ -237,7 +238,6 @@ int TetrisGame::whoPressed(char keyPressed) {
 	return ABORT;
 }
 
-
 void TetrisGame::endGame()
 {
 	isGameOn = false;
@@ -285,3 +285,48 @@ void TetrisGame::endGame()
 	}
 
 }
+
+
+void TetrisGame::setIsColor(bool state)
+{
+	isColor = state;
+}
+
+bool TetrisGame::getIsColor()
+{
+	return isColor;
+}
+
+void TetrisGame::playWithColor()
+{
+	char keyPressed = DEFAULT_VALUE;
+
+	clearScreen();
+
+	cout << "Before we starting.." << endl;
+	cout << "You need to decide if you want to play with colors." << endl;
+	cout << "To play without colors press (0)" << endl;
+	cout << "To play with the key colors (1)" << endl;
+
+	while (true)
+	{
+		if (_kbhit()) {
+			keyPressed = getKeyFromUser();
+
+			if (keyPressed == '0' || keyPressed == '1')
+			{
+				if (keyPressed == '1') {
+					setIsColor(true);
+				}
+				else {
+					setIsColor(false);
+				}
+				break;
+			}
+		}
+	}
+
+}
+
+
+

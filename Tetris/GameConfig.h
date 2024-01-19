@@ -10,6 +10,7 @@ public:
 	{
 		Straight = 1, Square, TShaped, LShaped, SShaped, JShaped, ZShaped
 	};
+	
 	static constexpr int GAME_WIDTH = 12;
 	static constexpr int GAME_HEIGHT = 18;
 	static constexpr int GAME_TIME = 300;
@@ -21,6 +22,11 @@ public:
 	static constexpr char SECOND_BOARD_Y = 4;
 	static constexpr char TETRIS_MSG_X = 36;
 	static constexpr char TETRIS_MSG_Y = 1;
+
+	//YARDEN
+	static const int COLORS[];
+	static const int NUM_OF_COLOR; //??????????
+
 
 	// This method disables the cursor to eliminate jittering
 	void showConsoleCursor(bool showFlag);

@@ -3,6 +3,7 @@
 
 #include "Tetromino.h"
 #include "GameConfig.h"
+#include "Point.h"
 
 #define NUM_OF_PLAYERS 2
 
@@ -12,8 +13,11 @@ class Board
 	Tetromino currentTetromino;
 	char gameBoard[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH];
 	int score;
-
+	//yarden**************************************************************************************************************************************************************************************************************
+	int colorByLocation[(GameConfig::GAME_HEIGHT)][(GameConfig::GAME_WIDTH)];
+	int backgroundColor;
 public:
+
 	// This method initalizes a board, with a border and empty interior
 	void initBoard();
 
@@ -72,6 +76,31 @@ public:
 	
 	//This method prints the player's score in the relevant place on the screen
 	void printScore(int x, int y);
+
+	//COLORS METHODS:
+	//The color printing methods will work as follows:
+	//There will be a matrix of colors in the size of the board whose positions in the matrix will be coordinated with the position of a point on the board.
+
+	//This method gets a color and defines the color to be the backcolor of the print
+	void WhatColor(int color);
+
+	//This method initializes the entire matrix to be black
+	void initColorByLocation( );
+
+	//This method receives a color and a location on the board and updates the color in a colors matrix.
+	void updateColorByLocation(int x, int y, int color);
+
+	void setBackgroundColor(int color);
+	
+	int getBackgroundColor();
+
+	//This method prints the board according to the colors that are updated in a colors matrix
+	void printWithColors(int x, int y);
+    
+	//This method prints the board without colors
+	void printWithoutColors(int x, int y);
+
+	
 };
 
 #endif

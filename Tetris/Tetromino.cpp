@@ -62,3 +62,10 @@ void Tetromino::setXCoordinate(int index, int x) {
 void Tetromino::setYCoordinate(int index, int y) {
 	points[index].setYValue(y);
 }
+
+
+
+
+
+
+

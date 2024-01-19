@@ -3,6 +3,7 @@
 #include "TetrisGame.h"
 #include "Board.h"
 
+
 int main() {
 	// Disable cursor Method
 	GameConfig().showConsoleCursor(false);
