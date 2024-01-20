@@ -1,4 +1,3 @@
-#pragma warning (disable:4996)
 
 #include <Windows.h>
 #include <iostream>
@@ -37,11 +36,9 @@ void TetrisGame::game() {
 			isGameOn = false;
 			initGame();
 			break;
-			/********************************************************************************YARDEN********************************************************/
 		case CONTINUE_GAME:
 			initGame();
 			break;
-			/********************************************************************************YARDEN********************************************************/
 		// Player pressed show instructions key
 		case SHOW_INSTRUCTIONS:
 			showInstructions();
@@ -130,14 +127,15 @@ void TetrisGame::initGame() {
 	char keyPressed = DEFAULT_VALUE;
 	int playerPressed = DEFAULT_VALUE;
 
-	// Get user's info if he wants to play with color or not
-	playWithColor();
-
+	
 	// Clear console screen
 	clearScreen();
 
-	/********************************************************************************YARDEN********************************************************/
 	if (isGameOn == false) {
+		// Get user's info if he wants to play with color or not
+		playWithColor();
+		clearScreen();
+
 		// Initialize player boards
 		boards[PLAYER1].setIsColor(isColor);
 		boards[PLAYER2].setIsColor(isColor);
@@ -145,6 +143,7 @@ void TetrisGame::initGame() {
 		boards[PLAYER1].initBoard();
 		boards[PLAYER2].initBoard();
 
+		//set players score to zero
 		boards[PLAYER1].setScores();
 		boards[PLAYER2].setScores();
 
@@ -153,7 +152,6 @@ void TetrisGame::initGame() {
 	}
 
 	isGameOn = true;
-	/********************************************************************************YARDEN********************************************************/
 
 
 	while (true) {
@@ -199,14 +197,11 @@ void TetrisGame::initGame() {
 			// Get key pressed
 			keyPressed = _getch();
 
-			/********************************************************************************YARDEN********************************************************/
 			if (keyPressed == ESC)
 			{
 				game();
 				break;
 			}
-			/********************************************************************************YARDEN********************************************************/
-
 
 			// Check who pressed the key
 			playerPressed = whoPressed(keyPressed);
@@ -221,6 +216,7 @@ void TetrisGame::initGame() {
 			}
 		}
 
+		//if one of the player lost
 		if (boards[PLAYER1].isPlayerLost() || boards[PLAYER2].isPlayerLost())
 		{
 			endGame();
@@ -249,40 +245,29 @@ void TetrisGame::endGame()
 	clearScreen();
 
 	// if both of the players lost in the same time the winner is the one with the higher score
-	if (boards[PLAYER1].isPlayerLost() && boards[PLAYER2].isPlayerLost())
-	{
-		if (boards[PLAYER1].getScore() > boards[PLAYER2].getScore())
-		{
+	if (boards[PLAYER1].isPlayerLost() && boards[PLAYER2].isPlayerLost()){
+		if (boards[PLAYER1].getScore() > boards[PLAYER2].getScore()){
 			cout << "The Winner is player #1 with the score: " << boards[PLAYER1].getScore() << endl;
 		}
-		else if (boards[PLAYER1].getScore() < boards[PLAYER2].getScore())
-		{
+		else if (boards[PLAYER1].getScore() < boards[PLAYER2].getScore()){
 			cout << "The Winner is player #2 with the score: " << boards[PLAYER2].getScore() << endl;
 		}
-		else
-		{
+		else{
 			cout << "A tie between the players with the score: " << boards[PLAYER1].getScore() << endl;
 		}
 	}
-	else if (boards[PLAYER2].isPlayerLost())
-	{
+	else if (boards[PLAYER2].isPlayerLost()){
 		cout << "The Winner is player #1 with the score: " << boards[PLAYER1].getScore() << endl;
 	}
-	else
-	{
+	else{
 		cout << "The Winner is player #2 with the score: " << boards[PLAYER2].getScore() << endl;
-
 	}
 
 	cout << endl << "Press any key to return to the menu";
 
-	//flushall();
 	
-	while (true)
-	{
-		if (_kbhit())
-		{
-			// Tal: - Added _getch because it was causing bugs in the menu
+	while (true){
+		if (_kbhit()){
 			getch();
 			game();
 			break;

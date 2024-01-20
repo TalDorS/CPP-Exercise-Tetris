@@ -19,7 +19,7 @@ using namespace std;
 
 void Board::initBoard() {
 
-	//yarden
+	// set the colors matrix to black
 	initColorByLocation();
 
 	// Set characters in the board
@@ -53,26 +53,6 @@ void Board::printBoard(int x, int y) {
 		printWithoutColors(x, y);
 	}
 
-
-
-	/*
-	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++) {
-		for (int j = DEFAULT_VALUE; j < GameConfig::GAME_WIDTH; j++) {
-			gotoxy(x + j, y + i);
-			//yarden
-			if (gameBoard[i][j] == ' ' || gameBoard[i][j] == GameConfig::BOARD_BORDER_CHAR){
-				setColor(GameConfig::COLORS[0]);
-			}
-			else{
-				setColor(colorByLocation[i][j]);
-			}
-			cout << gameBoard[i][j];
-		}
-		//yarden
-		setColor(GameConfig::COLORS[0]);
-		cout << endl;
-	}
-	*/
 }
 
 void Board::addTetromino() {
@@ -81,6 +61,7 @@ void Board::addTetromino() {
 
 	GameConfig::eShapes shape = (GameConfig::eShapes)(rand() % 7 + 1);
 
+	//set the shape and color of the tetromino
 	// Handle according to 
 	switch (shape)
 	{
@@ -372,7 +353,7 @@ void Board::clearBlocks() {
 
 		gameBoard[y][x] = ' ';
 
-		//yarden**********************************************************
+		//after we clear the blocks we need to update the background color to black
 		updateColorByLocation(y, x, GameConfig::COLORS[0]);
 	}
 }
@@ -383,7 +364,6 @@ void Board::removeFullLines() {
 		if (isLineFull(y) && !currentTetromino.getIsMoving()) {
 			makeLineEmpty(y);
 			moveEverythingDown(y);
-			//************************************************************YARDEN**************************
 			updateScoreOfPlayer(10);
 		}
 	}
@@ -402,7 +382,7 @@ void Board::makeLineEmpty(int y) {
 	for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
 		if (gameBoard[y][x] != GameConfig::BOARD_BORDER_CHAR)
 			gameBoard[y][x] = ' ';
-		//yarden
+		//update the line to background color black
 		updateColorByLocation(y, x, GameConfig::COLORS[0]);
 
 	}
@@ -445,7 +425,7 @@ void Board::printTetromino() {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 		gameBoard[y][x] = GameConfig::TETROMINO_CHAR;
-		//****************************************************YARDEN*****************
+		// update the background color of the blocks of the tetromino
 		colorByLocation[y][x] = getBackgroundColor();
 	}
 }
@@ -455,11 +435,9 @@ void Board::moveEverythingDown(int y) {
 		for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
 			if (gameBoard[y][x] == GameConfig::TETROMINO_CHAR) {
 				gameBoard[y + 1][x] = GameConfig::TETROMINO_CHAR;
-				//yarden
 				updateColorByLocation(y + 1, x, colorByLocation[y][x]);
 
 				gameBoard[y][x] = ' ';
-				//yarden
 				updateColorByLocation(y + 1, x, GameConfig::COLORS[0]);
 			}
 		}
@@ -470,11 +448,11 @@ Tetromino Board::getCurrentTetromino() {
 	return currentTetromino;
 }
 
-//****************************************************YARDEN*****************
 bool Board::isPlayerLost()
 {
 	for (int i = 0; i < GameConfig::GAME_WIDTH; i++)
 	{
+		// if there is a TETROMINO_CHAR in the in the highest row of the board it's means that the player lost.
 		if (gameBoard[1][i] == GameConfig::TETROMINO_CHAR && !currentTetromino.getIsMoving())
 		{
 			return true;
@@ -485,7 +463,8 @@ bool Board::isPlayerLost()
 
 void Board::setScores()
 {
-	score= 0;
+	//set score to zero.
+	score= DEFAULT_VALUE;
 }
 
 int Board::getScore()
@@ -549,7 +528,8 @@ void Board::printWithColors(int x, int y)
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++) {
 		for (int j = DEFAULT_VALUE; j < GameConfig::GAME_WIDTH; j++) {
 			gotoxy(x + j, y + i);
-			//yarden
+		    
+			//if there is a TETROMINO_CHAR then print with color.
 			if (gameBoard[i][j] == ' ' || gameBoard[i][j] == GameConfig::BOARD_BORDER_CHAR) {
 				WhatColor(GameConfig::COLORS[0]);
 			}
@@ -558,7 +538,7 @@ void Board::printWithColors(int x, int y)
 			}
 			cout << gameBoard[i][j];
 		}
-		//yarden
+		//after printing the board with the colors, return the print color to be black
 		WhatColor(GameConfig::COLORS[0]);
 		cout << endl;
 	}
