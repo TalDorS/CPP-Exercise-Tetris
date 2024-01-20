@@ -130,13 +130,18 @@ void TetrisGame::initGame() {
 	char keyPressed = DEFAULT_VALUE;
 	int playerPressed = DEFAULT_VALUE;
 
+	// Get user's info if he wants to play with color or not
 	playWithColor();
 
+	// Clear console screen
 	clearScreen();
 
 	/********************************************************************************YARDEN********************************************************/
 	if (isGameOn == false) {
 		// Initialize player boards
+		boards[PLAYER1].setIsColor(isColor);
+		boards[PLAYER2].setIsColor(isColor);
+
 		boards[PLAYER1].initBoard();
 		boards[PLAYER2].initBoard();
 
@@ -303,10 +308,10 @@ void TetrisGame::playWithColor()
 
 	clearScreen();
 
-	cout << "Before we starting.." << endl;
+	cout << "Before we begin.." << endl;
 	cout << "You need to decide if you want to play with colors." << endl;
 	cout << "To play without colors press (0)" << endl;
-	cout << "To play with the key colors (1)" << endl;
+	cout << "To play with colors press (1)" << endl;
 
 	while (true)
 	{
@@ -321,7 +326,7 @@ void TetrisGame::playWithColor()
 				else {
 					setIsColor(false);
 				}
-				break;
+				return;
 			}
 		}
 	}

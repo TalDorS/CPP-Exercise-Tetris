@@ -19,7 +19,7 @@ public:
 
 	// This method displays the main menu of the game to the user on the screen
 	char showMenu();
-	
+
 	// This method displays the instructions of the game to the user on the screen
 	void showInstructions();
 
@@ -28,7 +28,7 @@ public:
 
 	// This method gets a key pressed and returns the player number that is relevant to it
 	int whoPressed(char keyPressed);
-	
+
 	//***************************************************************YARDEN**********************************************************
 	//This method summarizes the game, announces the winner and returns to the main menu.
 	void endGame();
@@ -39,7 +39,7 @@ public:
 	void setIsColor(bool state);
 
 	bool getIsColor();
-	
+
 };
 
 #endif

@@ -14,6 +14,7 @@ class Board
 	char gameBoard[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH];
 	int score;
 	//yarden**************************************************************************************************************************************************************************************************************
+	bool isColor;
 	int colorByLocation[(GameConfig::GAME_HEIGHT)][(GameConfig::GAME_WIDTH)];
 	int backgroundColor;
 public:
@@ -73,7 +74,8 @@ public:
 	void setScores();
 	int getScore();
 	void updateScoreOfPlayer(int num);
-	
+	void setIsColor(bool isColor);
+
 	//This method prints the player's score in the relevant place on the screen
 	void printScore(int x, int y);
 

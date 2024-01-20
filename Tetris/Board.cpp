@@ -45,8 +45,8 @@ void Board::printBoard(int x, int y) {
 	// Print tetromino characters
 	printTetromino();
 
-	// Print board
-	if (TetrisGame().getIsColor()) {
+	// Print board according to user's choice of colors
+	if (isColor) {
 		printWithColors(x, y);
 	}
 	else{
@@ -575,5 +575,7 @@ void Board::printWithoutColors(int x,int y)
 	}
 }
 
-
+void Board::setIsColor(bool isColor) {
+	this->isColor = isColor;
+}
 
