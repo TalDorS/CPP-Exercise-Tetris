@@ -13,21 +13,18 @@ class Board
 	Tetromino currentTetromino;
 	char gameBoard[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH];
 	int score;
-	bool isColor;
 	int colorByLocation[(GameConfig::GAME_HEIGHT)][(GameConfig::GAME_WIDTH)];
 	int backgroundColor;
+	bool isColor;
 public:
-
 	//set Methods
 	void setScores();
 	void setIsColor(bool isColor);
 	void setBackgroundColor(int color);
 
-
 	//get Methods
 	int getScore();
 	int getBackgroundColor();
-
 
 	// This method initalizes a board, with a border and empty interior
 	void initBoard();
@@ -103,8 +100,6 @@ public:
     
 	//This method prints the board without colors
 	void printWithoutColors(int x, int y);
-
-	
 };
 
 #endif

@@ -5,6 +5,8 @@
 
 
 int main() {
+	srand(time(0));
+
 	// Disable cursor Method
 	GameConfig().showConsoleCursor(false);
 

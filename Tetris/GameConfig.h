@@ -25,7 +25,6 @@ public:
 	static const int COLORS[];
 	static const int NUM_OF_COLOR;
 
-
 	// This method disables the cursor to eliminate jittering
 	void showConsoleCursor(bool showFlag);
 };

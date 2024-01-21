@@ -1,7 +1,6 @@
 #ifndef __POINT_H
 #define __POINT_H
 
-
 class Point
 {
 	int xValue;

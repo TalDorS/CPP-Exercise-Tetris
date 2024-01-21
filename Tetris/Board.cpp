@@ -57,8 +57,6 @@ void Board::printBoard(int x, int y) {
 
 void Board::addTetromino() {
 	// Generate a random number between 1 and 7 that will decide the shape
-	srand(time(0));
-
 	GameConfig::eShapes shape = (GameConfig::eShapes)(rand() % 7 + 1);
 
 	//set the shape and color of the tetromino
@@ -450,7 +448,7 @@ Tetromino Board::getCurrentTetromino() {
 
 bool Board::isPlayerLost()
 {
-	for (int i = 0; i < GameConfig::GAME_WIDTH; i++)
+	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_WIDTH; i++)
 	{
 		// if there is a TETROMINO_CHAR in the in the highest row of the board it's means that the player lost.
 		if (gameBoard[1][i] == GameConfig::TETROMINO_CHAR && !currentTetromino.getIsMoving())
@@ -510,7 +508,7 @@ void Board::initColorByLocation()
 
 void Board::updateColorByLocation(int x, int y, int color)
 {
-	colorByLocation[x][y] =color;
+	colorByLocation[x][y] = color;
 }
 
 void Board::setBackgroundColor(int color)

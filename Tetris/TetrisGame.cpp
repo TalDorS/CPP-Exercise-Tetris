@@ -9,6 +9,8 @@
 #include "Board.h"
 
 #define DEFAULT_VALUE 0
+#define WITH_COLORS '1'
+#define WITHOUT_COLORS '0'
 #define PLAYER1 0
 #define PLAYER2 1
 #define ABORT -1
@@ -126,14 +128,14 @@ void TetrisGame::showInstructions() {
 void TetrisGame::initGame() {
 	char keyPressed = DEFAULT_VALUE;
 	int playerPressed = DEFAULT_VALUE;
-
+	bool isColor;
 	
 	// Clear console screen
 	clearScreen();
 
 	if (isGameOn == false) {
 		// Get user's info if he wants to play with color or not
-		playWithColor();
+		isColor = playWithColor();
 		clearScreen();
 
 		// Initialize player boards
@@ -143,10 +145,11 @@ void TetrisGame::initGame() {
 		boards[PLAYER1].initBoard();
 		boards[PLAYER2].initBoard();
 
-		//set players score to zero
+		// Set players score to zero
 		boards[PLAYER1].setScores();
 		boards[PLAYER2].setScores();
 
+		// Add a new tetromino shape to the board
 		boards[PLAYER1].addTetromino();
 		boards[PLAYER2].addTetromino();
 	}
@@ -268,7 +271,7 @@ void TetrisGame::endGame()
 	
 	while (true){
 		if (_kbhit()){
-			getch();
+			_getch();
 			game();
 			break;
 		}
@@ -276,18 +279,7 @@ void TetrisGame::endGame()
 
 }
 
-
-void TetrisGame::setIsColor(bool state)
-{
-	isColor = state;
-}
-
-bool TetrisGame::getIsColor()
-{
-	return isColor;
-}
-
-void TetrisGame::playWithColor()
+bool TetrisGame::playWithColor()
 {
 	char keyPressed = DEFAULT_VALUE;
 
@@ -303,19 +295,15 @@ void TetrisGame::playWithColor()
 		if (_kbhit()) {
 			keyPressed = getKeyFromUser();
 
-			if (keyPressed == '0' || keyPressed == '1')
-			{
-				if (keyPressed == '1') {
-					setIsColor(true);
-				}
-				else {
-					setIsColor(false);
-				}
-				return;
+			if (keyPressed == WITH_COLORS) {
+				return true;
+			}
+			if (keyPressed == WITHOUT_COLORS) {
+				return false;
 			}
 		}
 	}
-
+	return false;
 }
 
 
