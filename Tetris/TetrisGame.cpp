@@ -218,6 +218,10 @@ int TetrisGame::whoPressed(char keyPressed) {
 
 void TetrisGame::endGame()
 {
+	// Get all past inputs
+	while (_kbhit())
+		_getch();
+
 	isGameOn = false;
 	clearScreen();
 
@@ -241,7 +245,7 @@ void TetrisGame::endGame()
 	}
 
 	cout << endl << "Press any key to return to the menu";
-
+	
 	while (true){
 		if (_kbhit()){
 			_getch();

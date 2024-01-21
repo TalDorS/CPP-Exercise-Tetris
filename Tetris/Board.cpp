@@ -461,7 +461,7 @@ bool Board::isPlayerLost()
 void Board::setScores()
 {
 	//set score to zero.
-	score= DEFAULT_VALUE;
+	score = DEFAULT_VALUE;
 }
 
 int Board::getScore()
