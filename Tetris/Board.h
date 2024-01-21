@@ -87,7 +87,7 @@ public:
 	//There will be a matrix of colors in the size of the board whose positions in the matrix will be coordinated with the position of a point on the board.
 
 	//This method gets a color and defines the color to be the background color of the print
-	void WhatColor(int color);
+	void whatColor(int color);
 
 	//This method initializes the entire matrix to be black
 	void initColorByLocation( );

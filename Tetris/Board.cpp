@@ -14,6 +14,7 @@
 #define CLOCKWISE 1
 #define COUNTERCLOCKWISE -1
 #define SECOND_POINT 1
+#define ADDED_PIECE 10
 #define EMPTY_CHAR ' '
 
 using namespace std;
@@ -53,7 +54,6 @@ void Board::printBoard(int x, int y) {
 	else{
 		printWithoutColors(x, y);
 	}
-
 }
 
 void Board::addTetromino() {
@@ -119,7 +119,7 @@ bool Board::spaceBelowTetromino() {
 
 		// If the board has a character below a certain tetromino coordinate, and also it's not
 		// the tetromino's character, return false and set tetromino to stop moving.
-		if (gameBoard[y + 1][x] != ' ' && !currentTetromino.isContainCoordinates(y + 1, x)) {
+		if (gameBoard[y + 1][x] != EMPTY_CHAR && !currentTetromino.isContainCoordinates(y + 1, x)) {
 			currentTetromino.setIsMoving(false);
 			return false;
 		}
@@ -237,7 +237,7 @@ void Board::turnTetrominoLeft() {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 
-		if (gameBoard[y][x - 1] != ' ') {
+		if (gameBoard[y][x - 1] != EMPTY_CHAR) {
 			// Collision with right border or another block, do not move
 			// Also check if an not empty block is part of the tetromino
 			if (!currentTetromino.isContainCoordinates(y, x - 1))
@@ -265,7 +265,7 @@ void Board::turnTetrominoRight() {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 
-		if (gameBoard[y][x + 1] != ' ') {
+		if (gameBoard[y][x + 1] != EMPTY_CHAR) {
 			// Collision with right border or another block, do not move
 			// Also check if an not empty block is part of the tetromino
 			if (!currentTetromino.isContainCoordinates(y, x + 1))
@@ -312,18 +312,19 @@ void Board::turnTetrominoClockwise(int num) {
 		rotatedTetromino.setYCoordinate(i, ySecond + newY);
 	}
 
-	clearBlocks();
-
 	// Check for collision
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
 		// Fetch the x and y coordinates of the new point
 		x = rotatedTetromino.getXCoordinate(i);
 		y = rotatedTetromino.getYCoordinate(i);
 
-		if (gameBoard[y][x + 1] != EMPTY_CHAR) {
+		if (gameBoard[y][x] != EMPTY_CHAR) {
 			return;
 		}
 	}
+
+	clearBlocks();
+
 	currentTetromino = rotatedTetromino;
 }
 
@@ -362,7 +363,7 @@ void Board::removeFullLines() {
 		if (isLineFull(y) && !currentTetromino.getIsMoving()) {
 			makeLineEmpty(y);
 			moveEverythingDown(y);
-			updateScoreOfPlayer(10);
+			updateScoreOfPlayer(ADDED_PIECE);
 		}
 	}
 }
@@ -395,7 +396,7 @@ void Board::moveTetrominoDown() {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 
-		if (gameBoard[y + 1][x] != ' ') {
+		if (gameBoard[y + 1][x] != EMPTY_CHAR) {
 			// Collision with right border or another block, do not move
 			if (!currentTetromino.isContainCoordinates(y + 1, x))
 				return;
@@ -409,8 +410,9 @@ void Board::moveTetrominoDown() {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 
+		// Update coordinates and colors
 		currentTetromino.setYCoordinate(i, y + 1);
-		updateColorByLocation(x, y + 1, getBackgroundColor());
+		updateColorByLocation(y + 1, x, getBackgroundColor());
 	}
 }
 
@@ -418,13 +420,14 @@ void Board::printTetromino() {
 	// Add tetromino to board
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
+	int backGroundColor = getBackgroundColor();
 
 	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 		gameBoard[y][x] = GameConfig::TETROMINO_CHAR;
 		// update the background color of the blocks of the tetromino
-		colorByLocation[y][x] = getBackgroundColor();
+		colorByLocation[y][x] = backGroundColor;
 	}
 }
 
@@ -488,7 +491,7 @@ void Board::printScore(int x, int y)
 	}
 }
 
-void Board::WhatColor(int color)
+void Board::whatColor(int color)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
@@ -525,16 +528,17 @@ void Board::printWithColors(int x, int y)
 			gotoxy(x + j, y + i);
 		    
 			//if there is a TETROMINO_CHAR then print with color.
-			if (gameBoard[i][j] == ' ' || gameBoard[i][j] == GameConfig::BOARD_BORDER_CHAR) {
-				WhatColor(GameConfig::COLORS[0]);
+			if (gameBoard[i][j] == EMPTY_CHAR || gameBoard[i][j] == GameConfig::BOARD_BORDER_CHAR) {
+				whatColor(GameConfig::COLORS[0]);
 			}
 			else {
-				WhatColor(colorByLocation[i][j]);
+				whatColor(colorByLocation[i][j]);
 			}
 			cout << gameBoard[i][j];
 		}
+		
 		//after printing the board with the colors, return the print color to be black
-		WhatColor(GameConfig::COLORS[0]);
+		whatColor(GameConfig::COLORS[0]);
 		cout << endl;
 	}
 }
