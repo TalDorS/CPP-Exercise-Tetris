@@ -378,10 +378,11 @@ bool Board::isLineFull(int y) {
 
 void Board::makeLineEmpty(int y) {
 	for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
-		if (gameBoard[y][x] != GameConfig::BOARD_BORDER_CHAR)
+		if (gameBoard[y][x] != GameConfig::BOARD_BORDER_CHAR) {
 			gameBoard[y][x] = ' ';
-		//update the line to background color black
-		updateColorByLocation(y, x, GameConfig::COLORS[0]);
+			//update the line to background color black
+			updateColorByLocation(y, x, GameConfig::COLORS[0]);
+		}
 
 	}
 }
@@ -436,7 +437,7 @@ void Board::moveEverythingDown(int y) {
 				updateColorByLocation(y + 1, x, colorByLocation[y][x]);
 
 				gameBoard[y][x] = ' ';
-				updateColorByLocation(y + 1, x, GameConfig::COLORS[0]);
+				updateColorByLocation(y, x, GameConfig::COLORS[0]);
 			}
 		}
 	}
