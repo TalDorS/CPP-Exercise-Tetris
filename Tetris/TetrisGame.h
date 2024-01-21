@@ -25,17 +25,17 @@ public:
 	// This method initializes the game
 	void initGame();
 
+	// This method initializes the boards, colors, scores and tetrominos
+	void initBoards();
+
 	// This method gets a key pressed and returns the player number that is relevant to it
 	int whoPressed(char keyPressed);
 
 	//This method summarizes the game, announces the winner and returns to the main menu.
 	void endGame();
 
-	//This method presents the user with the option to play with colors and get the user's choice
+	//This method presents the user with the option to play with colors or not and get the user's choice
 	bool playWithColor();
-
-
-
 };
 
 #endif

@@ -7,29 +7,32 @@
 #define THIRD 2
 #define FOURTH 3
 
-//**1**
 void Tetromino::setXCoordinates(int x1, int x2, int x3, int x4) {
 	points[FIRST].setXValue(x1);
 	points[SECOND].setXValue(x2);
 	points[THIRD].setXValue(x3);
 	points[FOURTH].setXValue(x4);
 }
-//**3**
+
 void Tetromino::setYCoordinates(int y1, int y2, int y3, int y4) {
 	points[FIRST].setYValue(y1);
 	points[SECOND].setYValue(y2);
 	points[THIRD].setYValue(y3);
 	points[FOURTH].setYValue(y4);
 }
-//**6**
+
 void Tetromino::setShape(int shape) {
 	this->shape = shape;
 }
-//**7**
+
+int Tetromino::getShape() {
+	return shape;
+}
+
 int Tetromino::getXCoordinate(int index) {
 	return points[index].getX();
 }
-//**8**
+
 int Tetromino::getYCoordinate(int index) {
 	return points[index].getY();
 }
@@ -43,22 +46,18 @@ bool Tetromino::isContainCoordinates(int y, int x) {
 	return false;
 }
 
-//**9**
 bool Tetromino::getIsMoving() {
 	return isMoving;
 }
 
-//**5**
 void Tetromino::setIsMoving(bool state) {
 	isMoving = state; 
 }
 
-//**2**
 void Tetromino::setXCoordinate(int index, int x) {
 	points[index].setXValue(x);
 }
 
-//**4**
 void Tetromino::setYCoordinate(int index, int y) {
 	points[index].setYValue(y);
 }

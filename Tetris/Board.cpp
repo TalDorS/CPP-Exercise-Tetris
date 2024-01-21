@@ -14,6 +14,7 @@
 #define CLOCKWISE 1
 #define COUNTERCLOCKWISE -1
 #define SECOND_POINT 1
+#define EMPTY_CHAR ' '
 
 using namespace std;
 
@@ -29,7 +30,7 @@ void Board::initBoard() {
 				gameBoard[i][j] = GameConfig::BOARD_BORDER_CHAR;
 			}
 			else
-				gameBoard[i][j] = ' ';
+				gameBoard[i][j] = EMPTY_CHAR;
 		}
 	}
 }
@@ -58,6 +59,8 @@ void Board::printBoard(int x, int y) {
 void Board::addTetromino() {
 	// Generate a random number between 1 and 7 that will decide the shape
 	GameConfig::eShapes shape = (GameConfig::eShapes)(rand() % 7 + 1);
+
+	currentTetromino.setShape((int)shape);
 
 	//set the shape and color of the tetromino
 	// Handle according to 
@@ -282,6 +285,10 @@ void Board::turnTetrominoRight() {
 }
 
 void Board::turnTetrominoClockwise(int num) {
+	// Don't perform function for squared shape
+	if (currentTetromino.getShape() == (int)GameConfig::eShapes::Square)
+		return;
+
 	int x = DEFAULT_VALUE, xSecond = currentTetromino.getXCoordinate(SECOND_POINT);
 	int y = DEFAULT_VALUE, ySecond = currentTetromino.getYCoordinate(SECOND_POINT);
 
@@ -313,15 +320,10 @@ void Board::turnTetrominoClockwise(int num) {
 		x = rotatedTetromino.getXCoordinate(i);
 		y = rotatedTetromino.getYCoordinate(i);
 
-		if (gameBoard[y][x + 1] != ' ') {
-			// Collision with right border or another block, do not move
-			// Also check if an not empty block is part of the tetromino
-			// if (!currentTetromino.isContainCoordinates(yCoordinates[i], xCoordinates[i] + 1))
+		if (gameBoard[y][x + 1] != EMPTY_CHAR) {
 			return;
 		}
 	}
-
-
 	currentTetromino = rotatedTetromino;
 }
 
@@ -336,8 +338,6 @@ void Board::dropTetromino() {
 			currentTetromino.setYCoordinate(i, y + 1);
 		}
 	}
-
-
 	printTetromino();
 }
 
@@ -349,7 +349,7 @@ void Board::clearBlocks() {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 
-		gameBoard[y][x] = ' ';
+		gameBoard[y][x] = EMPTY_CHAR;
 
 		//after we clear the blocks we need to update the background color to black
 		updateColorByLocation(y, x, GameConfig::COLORS[0]);
@@ -369,7 +369,7 @@ void Board::removeFullLines() {
 
 bool Board::isLineFull(int y) {
 	for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
-		if (gameBoard[y][x] == ' ')
+		if (gameBoard[y][x] == EMPTY_CHAR)
 			return false;
 	}
 
@@ -379,7 +379,7 @@ bool Board::isLineFull(int y) {
 void Board::makeLineEmpty(int y) {
 	for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
 		if (gameBoard[y][x] != GameConfig::BOARD_BORDER_CHAR) {
-			gameBoard[y][x] = ' ';
+			gameBoard[y][x] = EMPTY_CHAR;
 			//update the line to background color black
 			updateColorByLocation(y, x, GameConfig::COLORS[0]);
 		}
@@ -411,7 +411,6 @@ void Board::moveTetrominoDown() {
 
 		currentTetromino.setYCoordinate(i, y + 1);
 		updateColorByLocation(x, y + 1, getBackgroundColor());
-
 	}
 }
 
@@ -435,8 +434,7 @@ void Board::moveEverythingDown(int y) {
 			if (gameBoard[y][x] == GameConfig::TETROMINO_CHAR) {
 				gameBoard[y + 1][x] = GameConfig::TETROMINO_CHAR;
 				updateColorByLocation(y + 1, x, colorByLocation[y][x]);
-
-				gameBoard[y][x] = ' ';
+				gameBoard[y][x] = EMPTY_CHAR;
 				updateColorByLocation(y, x, GameConfig::COLORS[0]);
 			}
 		}
@@ -499,11 +497,9 @@ void Board::initColorByLocation()
 {
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++)
 	{
-
 		for (int j = DEFAULT_VALUE; j < GameConfig::GAME_WIDTH; j++) {
 			colorByLocation[i][j] = FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN;
 		}
-
 	}
 }
 

@@ -3,6 +3,7 @@
 #include <process.h> 
 #include <conio.h>
 #include <iostream>
+
 using namespace std;
 
 void gotoxy(int x, int y)
@@ -30,4 +31,12 @@ char getKeyFromUser() {
 			return keyPressed;
 		}
 	}
+}
+
+void showConsoleCursor(bool showFlag) {
+	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO cursorInfo;
+	GetConsoleCursorInfo(out, &cursorInfo);
+	cursorInfo.bVisible = showFlag;
+	SetConsoleCursorInfo(out, &cursorInfo);
 }

@@ -11,7 +11,6 @@ class Tetromino
 	bool isMoving = false;
 	int shape;
 
-
 public:
 	// Set Methods
 	void setXCoordinates(int x1, int x2, int x3, int x4);
@@ -24,12 +23,11 @@ public:
 	// Get Methods
 	int getXCoordinate(int index);
 	int getYCoordinate(int index);
+	int getShape();
 	bool getIsMoving();
 
 	// This method checks if both x and y coordinate is in its arrays
 	bool isContainCoordinates(int x, int y);
-
-
 };
 
 #endif

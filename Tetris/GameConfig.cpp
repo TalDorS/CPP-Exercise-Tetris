@@ -13,16 +13,3 @@
 
 const int GameConfig::COLORS[] = { FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN,YELLOW,PURPLE,BLUE,WHITE,RED,TURQUISE,GREEN};
 const int GameConfig::NUM_OF_COLOR = sizeof(COLORS) / sizeof(COLORS[1]);
-
-
-
-void GameConfig::showConsoleCursor(bool showFlag) {
-	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	CONSOLE_CURSOR_INFO cursorInfo;
-
-	GetConsoleCursorInfo(out, &cursorInfo);
-	cursorInfo.bVisible = showFlag; 
-	SetConsoleCursorInfo(out, &cursorInfo);
-}
-

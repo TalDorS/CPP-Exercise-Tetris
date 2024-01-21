@@ -1,4 +1,3 @@
-
 #include <Windows.h>
 #include <iostream>
 #include <conio.h>
@@ -11,6 +10,7 @@
 #define DEFAULT_VALUE 0
 #define WITH_COLORS '1'
 #define WITHOUT_COLORS '0'
+#define STARTING_SCORE 1
 #define PLAYER1 0
 #define PLAYER2 1
 #define ABORT -1
@@ -26,10 +26,10 @@ using namespace std;
 void TetrisGame::game() {
 	char keyPressed = DEFAULT_VALUE;
 
-	// Show menu and get key input
-	keyPressed = showMenu();
+	while (keyPressed != EXIT_GAME) {
+		// Show menu and get key input
+		keyPressed = showMenu();
 
-	
 		// Move the user to the next section according to his decision
 		switch (keyPressed)
 		{
@@ -41,7 +41,7 @@ void TetrisGame::game() {
 		case CONTINUE_GAME:
 			initGame();
 			break;
-		// Player pressed show instructions key
+			// Player pressed show instructions key
 		case SHOW_INSTRUCTIONS:
 			showInstructions();
 			break;
@@ -51,8 +51,7 @@ void TetrisGame::game() {
 			return;
 			break;
 		}
-	
-	
+	}
 }
 
 char TetrisGame::showMenu() {
@@ -81,12 +80,11 @@ char TetrisGame::showMenu() {
 		}			
 	}
 		
-
 	return keyPressed;
 }
 
 void TetrisGame::showInstructions() {
-	char keyPressed = 0;
+	char keyPressed = DEFAULT_VALUE;
 
 	clearScreen();
 
@@ -122,50 +120,29 @@ void TetrisGame::showInstructions() {
 	while (keyPressed != RETURN_TO_MENU)
 		keyPressed = getKeyFromUser();
 
-	game();
+	return;
 }
 
 void TetrisGame::initGame() {
 	char keyPressed = DEFAULT_VALUE;
 	int playerPressed = DEFAULT_VALUE;
-	bool isColor;
 	
 	// Clear console screen
 	clearScreen();
 
+	// If there is no game going on, initialize new boards
 	if (isGameOn == false) {
-		// Get user's info if he wants to play with color or not
-		isColor = playWithColor();
-		clearScreen();
-
-		// Initialize player boards
-		boards[PLAYER1].setIsColor(isColor);
-		boards[PLAYER2].setIsColor(isColor);
-
-		boards[PLAYER1].initBoard();
-		boards[PLAYER2].initBoard();
-
-		// Set players score to zero
-		boards[PLAYER1].setScores();
-		boards[PLAYER2].setScores();
-
-		// Add a new tetromino shape to the board
-		boards[PLAYER1].addTetromino();
-		boards[PLAYER2].addTetromino();
+		initBoards();
+		isGameOn = true;
 	}
-
-	isGameOn = true;
-
-
+		
 	while (true) {
-
-
 		// Add new tetrominos to players if their tetrominos are not moving
 		if (!boards[PLAYER1].isTetrominoMoving())
 		{
 			if (!boards[PLAYER1].isPlayerLost())
 			{   
-				boards[PLAYER1].updateScoreOfPlayer(1);
+				boards[PLAYER1].updateScoreOfPlayer(STARTING_SCORE);
 				boards[PLAYER1].removeFullLines();
 				boards[PLAYER1].addTetromino();
 			}
@@ -175,7 +152,7 @@ void TetrisGame::initGame() {
 		{
 			if (!boards[PLAYER2].isPlayerLost())
 			{
-				boards[PLAYER2].updateScoreOfPlayer(1);
+				boards[PLAYER2].updateScoreOfPlayer(STARTING_SCORE);
 				boards[PLAYER2].removeFullLines();
 				boards[PLAYER2].addTetromino();
 			}
@@ -190,7 +167,6 @@ void TetrisGame::initGame() {
 		boards[PLAYER2].spaceBelowTetromino();
 
 		// Pull tetrominos down every 2 seconds
-
 		boards[PLAYER1].moveTetrominoDown();
 		boards[PLAYER2].moveTetrominoDown();
 
@@ -200,11 +176,9 @@ void TetrisGame::initGame() {
 			// Get key pressed
 			keyPressed = _getch();
 
+			// If player pressed escape, we show return to the main menu.
 			if (keyPressed == ESC)
-			{
-				game();
-				break;
-			}
+				return;
 
 			// Check who pressed the key
 			playerPressed = whoPressed(keyPressed);
@@ -219,11 +193,11 @@ void TetrisGame::initGame() {
 			}
 		}
 
-		//if one of the player lost
+		// Check if one of the player lost
 		if (boards[PLAYER1].isPlayerLost() || boards[PLAYER2].isPlayerLost())
 		{
 			endGame();
-			break;
+			return;
 		}
 
 		// Put delay for humans
@@ -268,12 +242,10 @@ void TetrisGame::endGame()
 
 	cout << endl << "Press any key to return to the menu";
 
-	
 	while (true){
 		if (_kbhit()){
 			_getch();
-			game();
-			break;
+			return;
 		}
 	}
 
@@ -285,11 +257,13 @@ bool TetrisGame::playWithColor()
 
 	clearScreen();
 
+	// Instructions message for user
 	cout << "Before we begin.." << endl;
 	cout << "You need to decide if you want to play with colors." << endl;
 	cout << "To play without colors press (0)" << endl;
 	cout << "To play with colors press (1)" << endl;
 
+	// Get decision from user
 	while (true)
 	{
 		if (_kbhit()) {
@@ -306,5 +280,27 @@ bool TetrisGame::playWithColor()
 	return false;
 }
 
+void TetrisGame::initBoards() {
+	bool isColor;
 
+	// Get user's info if he wants to play with color or not
+	isColor = playWithColor();
+	clearScreen();
+
+	// Initialize board colors
+	boards[PLAYER1].setIsColor(isColor);
+	boards[PLAYER2].setIsColor(isColor);
+
+	// Initialize boards
+	boards[PLAYER1].initBoard();
+	boards[PLAYER2].initBoard();
+
+	// Set players score to zero
+	boards[PLAYER1].setScores();
+	boards[PLAYER2].setScores();
+
+	// Add a new tetromino shape to the board
+	boards[PLAYER1].addTetromino();
+	boards[PLAYER2].addTetromino();
+}
 

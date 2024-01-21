@@ -1,14 +1,15 @@
 #include <iostream>
-#include "GameConfig.h"
+#include "General.h"
 #include "TetrisGame.h"
 #include "Board.h"
 
 
 int main() {
+	// Utility function for rand function
 	srand(time(0));
 
 	// Disable cursor Method
-	GameConfig().showConsoleCursor(false);
+	showConsoleCursor(false);
 
 	// Start Game
 	TetrisGame().game();
