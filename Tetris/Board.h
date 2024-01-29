@@ -16,6 +16,8 @@ class Board
 	int colorByLocation[(GameConfig::GAME_HEIGHT)][(GameConfig::GAME_WIDTH)];
 	int backgroundColor;
 	bool isColor;
+
+
 public:
 	//set Methods
 	void setScores();
@@ -23,8 +25,8 @@ public:
 	void setBackgroundColor(int color);
 
 	//get Methods
-	int getScore();
-	int getBackgroundColor();
+	int getScore() const;
+	int getBackgroundColor() const;
 
 	// This method initalizes a board, with a border and empty interior
 	void initBoard();
@@ -52,7 +54,7 @@ public:
 	void performAction(char keyPressed, int playerNumber);
 
 	// This method checks if a line is full
-	bool isLineFull(int y);
+	bool isLineFull(int y) const;
 
 	// This method deletes a line from the board
 	void makeLineEmpty(int y);
@@ -80,7 +82,7 @@ public:
 	void updateScoreOfPlayer(int num);
 
 	//This method prints the player's score in the relevant place on the screen
-	void printScore(int x, int y);
+	void printScore(int x, int y) const;
 
 	//COLORS METHODS:
 	//The color printing methods will work as follows:
@@ -90,7 +92,7 @@ public:
 	void whatColor(int color);
 
 	//This method initializes the entire matrix to be black
-	void initColorByLocation( );
+	void initColorByLocation();
 
 	//This method receives a color and a location on the board and updates the color in a colors matrix.
 	void updateColorByLocation(int x, int y, int color);

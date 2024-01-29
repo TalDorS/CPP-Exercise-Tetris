@@ -368,7 +368,7 @@ void Board::removeFullLines() {
 	}
 }
 
-bool Board::isLineFull(int y) {
+bool Board::isLineFull(int y) const {
 	for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
 		if (gameBoard[y][x] == EMPTY_CHAR)
 			return false;
@@ -467,7 +467,7 @@ void Board::setScores()
 	score = DEFAULT_VALUE;
 }
 
-int Board::getScore()
+int Board::getScore() const
 {
 	return score;
 }
@@ -477,7 +477,7 @@ void Board::updateScoreOfPlayer(int num)
 	 score+=num;
 }
 
-void Board::printScore(int x, int y)
+void Board::printScore(int x, int y) const
 {
 	gotoxy(x - 4, y - 1);
 
@@ -516,7 +516,7 @@ void Board::setBackgroundColor(int color)
 	backgroundColor = color;
 }
 
-int Board::getBackgroundColor()
+int Board::getBackgroundColor() const
 {
 	return backgroundColor;
 }

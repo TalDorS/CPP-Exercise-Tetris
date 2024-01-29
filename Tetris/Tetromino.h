@@ -3,10 +3,9 @@
 
 #include "Point.h"
 
-#define NUMBER_OF_POINTS 4
-
 class Tetromino
 {
+	static constexpr int NUMBER_OF_POINTS = 4;
 	Point points[NUMBER_OF_POINTS];
 	bool isMoving = false;
 	int shape;

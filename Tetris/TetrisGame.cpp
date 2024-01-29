@@ -54,7 +54,7 @@ void TetrisGame::game() {
 	}
 }
 
-char TetrisGame::showMenu() {
+char TetrisGame::showMenu() const {
 	char keyPressed = DEFAULT_VALUE;
 
 	clearScreen();
@@ -83,7 +83,7 @@ char TetrisGame::showMenu() {
 	return keyPressed;
 }
 
-void TetrisGame::showInstructions() {
+void TetrisGame::showInstructions() const {
 	char keyPressed = DEFAULT_VALUE;
 
 	clearScreen();
@@ -205,7 +205,7 @@ void TetrisGame::initGame() {
 	}
 }
 
-int TetrisGame::whoPressed(char keyPressed) {
+int TetrisGame::whoPressed(char keyPressed) const {
 	if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == 'd' || keyPressed == 'D' || keyPressed == 's'
 		|| keyPressed == 'S' || keyPressed == 'w' || keyPressed == 'W' || keyPressed == 'x' || keyPressed == 'X')
 		return PLAYER1;
@@ -255,7 +255,7 @@ void TetrisGame::endGame()
 
 }
 
-bool TetrisGame::playWithColor()
+bool TetrisGame::playWithColor() const
 {
 	char keyPressed = DEFAULT_VALUE;
 
@@ -291,20 +291,18 @@ void TetrisGame::initBoards() {
 	isColor = playWithColor();
 	clearScreen();
 
-	// Initialize board colors
-	boards[PLAYER1].setIsColor(isColor);
-	boards[PLAYER2].setIsColor(isColor);
+	for (int player = PLAYER1; player < NUM_OF_PLAYERS; ++player) {
+		// Initialize board colors
+		boards[player].setIsColor(isColor);
 
-	// Initialize boards
-	boards[PLAYER1].initBoard();
-	boards[PLAYER2].initBoard();
+		// Initialize boards
+		boards[player].initBoard();
 
-	// Set players score to zero
-	boards[PLAYER1].setScores();
-	boards[PLAYER2].setScores();
+		// Set player's score to zero
+		boards[player].setScores();
 
-	// Add a new tetromino shape to the board
-	boards[PLAYER1].addTetromino();
-	boards[PLAYER2].addTetromino();
+		// Add a new tetromino shape to the board
+		boards[player].addTetromino();
+	}
 }
 
