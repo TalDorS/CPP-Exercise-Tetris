@@ -12,7 +12,7 @@ class Tetromino
 
 public:
 	//here will be default empty c-tor for a Tetromino object by the compiler
-
+	Tetromino() = default;
 	// Set Methods
 	void setXCoordinates(int x1, int x2, int x3, int x4);
 	void setXCoordinate(int index, int x);
