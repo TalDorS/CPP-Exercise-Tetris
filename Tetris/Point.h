@@ -6,6 +6,9 @@ class Point
 	int xValue;
 	int yValue;
 public:
+	//empty c-tor for a Point object
+	Point(int x = 0, int y = 0) { x = xValue; y = yValue; }
+
 	// Set Methods
 	void setXYValues(int xValue, int yValue);
 	void setXValue(int xValue);

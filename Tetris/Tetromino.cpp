@@ -46,7 +46,7 @@ bool Tetromino::isContainCoordinates(int y, int x) {
 	return false;
 }
 
-bool Tetromino::getIsMoving() {
+bool Tetromino::getIsMoving() const{
 	return isMoving;
 }
 

@@ -9,6 +9,7 @@ class TetrisGame
 	Board boards[NUM_OF_BOARDS];
 	bool isGameOn = false;
 
+
 	// This method displays the main menu of the game to the user on the screen
 	char showMenu() const;
 

@@ -19,6 +19,17 @@
 
 using namespace std;
 
+Board::Board()
+{
+	// The board will be initialized to be an "empty board".
+	//The background color of the board will be reset entirely to black.
+	initBoard();
+	score = 0;
+	backgroundColor = GameConfig::COLORS[0];
+	isColor = false;
+}
+
+//not const
 void Board::initBoard() {
 
 	// set the colors matrix to black
@@ -36,7 +47,8 @@ void Board::initBoard() {
 	}
 }
 
-void Board::printBoard(int x, int y) {
+//not const
+void Board::printBoard(int x, int y)  {
 	// Print message above the boards
 	gotoxy(GameConfig::TETRIS_MSG_X, GameConfig::TETRIS_MSG_Y);
 	cout << "TETRIS";
@@ -56,6 +68,7 @@ void Board::printBoard(int x, int y) {
 	}
 }
 
+//not const
 void Board::addTetromino() {
 	// Generate a random number between 1 and 7 that will decide the shape
 	GameConfig::eShapes shape = (GameConfig::eShapes)(rand() % 7 + 1);
@@ -109,6 +122,7 @@ void Board::addTetromino() {
 	currentTetromino.setIsMoving(true);
 }
 
+//not const
 bool Board::spaceBelowTetromino() {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
@@ -127,6 +141,7 @@ bool Board::spaceBelowTetromino() {
 	return true;
 }
 
+//not const
 void Board::performAction(char keyPressed, int playerNumber) {
 	if (playerNumber == PLAYER1)
 	{
@@ -224,10 +239,11 @@ void Board::performAction(char keyPressed, int playerNumber) {
 	
 }
 
-bool Board::isTetrominoMoving() {
+bool Board::isTetrominoMoving() const {
 	return currentTetromino.getIsMoving();
 }
 
+//not const
 void Board::turnTetrominoLeft() {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
@@ -255,7 +271,7 @@ void Board::turnTetrominoLeft() {
 		currentTetromino.setXCoordinate(i, x - 1);
 	}
 }
-
+//not const
 void Board::turnTetrominoRight() {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
@@ -283,7 +299,7 @@ void Board::turnTetrominoRight() {
 		currentTetromino.setXCoordinate(i, x + 1);
 	}
 }
-
+//not const
 void Board::turnTetrominoClockwise(int num) {
 	// Don't perform function for squared shape
 	if (currentTetromino.getShape() == (int)GameConfig::eShapes::Square)
@@ -327,7 +343,7 @@ void Board::turnTetrominoClockwise(int num) {
 
 	currentTetromino = rotatedTetromino;
 }
-
+//not const
 void Board::dropTetromino() {
 	int y = DEFAULT_VALUE;
 
@@ -341,7 +357,7 @@ void Board::dropTetromino() {
 	}
 	printTetromino();
 }
-
+//not const
 void Board::clearBlocks() {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
@@ -356,7 +372,7 @@ void Board::clearBlocks() {
 		updateColorByLocation(y, x, GameConfig::COLORS[0]);
 	}
 }
-
+//not const
 void Board::removeFullLines() {
 	for (int y = DEFAULT_VALUE + 1; y < GameConfig::GAME_HEIGHT - 1; y++) {
 		// If a line is full and no tetromino is moving, delete the line
@@ -376,7 +392,7 @@ bool Board::isLineFull(int y) const {
 
 	return true;
 }
-
+//not const
 void Board::makeLineEmpty(int y) {
 	for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
 		if (gameBoard[y][x] != GameConfig::BOARD_BORDER_CHAR) {
@@ -387,7 +403,7 @@ void Board::makeLineEmpty(int y) {
 
 	}
 }
-
+//not const
 void Board::moveTetrominoDown() {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
@@ -415,7 +431,7 @@ void Board::moveTetrominoDown() {
 		updateColorByLocation(y + 1, x, getBackgroundColor());
 	}
 }
-
+// not const
 void Board::printTetromino() {
 	// Add tetromino to board
 	int x = DEFAULT_VALUE;
@@ -430,7 +446,7 @@ void Board::printTetromino() {
 		colorByLocation[y][x] = backGroundColor;
 	}
 }
-
+//not const
 void Board::moveEverythingDown(int y) {
 	for (y = y-1; y > 1; y--) {
 		for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
@@ -444,11 +460,11 @@ void Board::moveEverythingDown(int y) {
 	}
 }
 
-Tetromino Board::getCurrentTetromino() {
+Tetromino Board::getCurrentTetromino() const {
 	return currentTetromino;
 }
 
-bool Board::isPlayerLost()
+bool Board::isPlayerLost() const
 {
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_WIDTH; i++)
 	{
@@ -461,6 +477,7 @@ bool Board::isPlayerLost()
 	return false;
 }
 
+//notconst
 void Board::setScores()
 {
 	//set score to zero.
@@ -472,7 +489,8 @@ int Board::getScore() const
 	return score;
 }
 
-void Board::updateScoreOfPlayer(int num)
+//not const
+void Board::updateScoreOfPlayer(int num) 
 {
 	 score+=num;
 }
@@ -491,11 +509,12 @@ void Board::printScore(int x, int y) const
 	}
 }
 
-void Board::whatColor(int color)
+void Board::whatColor(int color) const
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
+//not const
 void Board::initColorByLocation()
 {
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++)
@@ -505,12 +524,12 @@ void Board::initColorByLocation()
 		}
 	}
 }
-
+//not const
 void Board::updateColorByLocation(int x, int y, int color)
 {
 	colorByLocation[x][y] = color;
 }
-
+//not const
 void Board::setBackgroundColor(int color)
 {
 	backgroundColor = color;
@@ -521,7 +540,7 @@ int Board::getBackgroundColor() const
 	return backgroundColor;
 }
 
-void Board::printWithColors(int x, int y)
+void Board::printWithColors(int x, int y) const 
 {
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++) {
 		for (int j = DEFAULT_VALUE; j < GameConfig::GAME_WIDTH; j++) {
@@ -543,7 +562,7 @@ void Board::printWithColors(int x, int y)
 	}
 }
 
-void Board::printWithoutColors(int x,int y)
+void Board::printWithoutColors(int x,int y) const 
 {
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++) {
 		for (int j = DEFAULT_VALUE; j < GameConfig::GAME_WIDTH; j++) {
@@ -553,7 +572,7 @@ void Board::printWithoutColors(int x,int y)
 		cout << endl;
 	}
 }
-
+//not const
 void Board::setIsColor(bool isColor) {
 	this->isColor = isColor;
 }

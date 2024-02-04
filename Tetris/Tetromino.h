@@ -11,6 +11,8 @@ class Tetromino
 	int shape;
 
 public:
+	//here will be default empty c-tor for a Tetromino object by the compiler
+
 	// Set Methods
 	void setXCoordinates(int x1, int x2, int x3, int x4);
 	void setXCoordinate(int index, int x);
@@ -23,7 +25,7 @@ public:
 	int getXCoordinate(int index);
 	int getYCoordinate(int index);
 	int getShape();
-	bool getIsMoving();
+	bool getIsMoving() const;
 
 	// This method checks if both x and y coordinate is in its arrays
 	bool isContainCoordinates(int x, int y);

@@ -13,16 +13,16 @@ void Point::setYValue(int yValue) {
 	this->yValue = yValue;
 }
 
-bool Point::isEqual(int xValue, int yValue) {
+bool Point::isEqual(int xValue, int yValue) const {
 	if ((this->xValue) == xValue && (this->yValue == yValue))
 		return true;
 	return false;
 }
 
-int Point::getX() {
+int Point::getX() const {
 	return this->xValue;
 }
 
-int Point::getY() {
+int Point::getY() const{
 	return this->yValue;
 }
