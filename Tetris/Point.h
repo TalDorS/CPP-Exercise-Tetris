@@ -15,11 +15,11 @@ public:
 	void setYValue(int yValue);
 
 	// Get Methods
-	int getX();
-	int getY();
+	int getX() const;
+	int getY() const;
 
 	// This method checks if the point's x and y equals to the given x and y
-	bool isEqual(int xValue, int yValue);
+	bool isEqual(int xValue, int yValue)const;
 };
 
 #endif
