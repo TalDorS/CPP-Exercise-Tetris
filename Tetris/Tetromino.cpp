@@ -1,7 +1,6 @@
 #include "Tetromino.h"
 
 #define DEFAULT_VALUE 0
-#define NUM_OF_COORDINATES 4
 #define FIRST 0
 #define SECOND 1
 #define THIRD 2
@@ -25,20 +24,20 @@ void Tetromino::setShape(int shape) {
 	this->shape = shape;
 }
 
-int Tetromino::getShape() {
+int Tetromino::getShape() const {
 	return shape;
 }
 
-int Tetromino::getXCoordinate(int index) {
+int Tetromino::getXCoordinate(int index) const {
 	return points[index].getX();
 }
 
-int Tetromino::getYCoordinate(int index) {
+int Tetromino::getYCoordinate(int index) const {
 	return points[index].getY();
 }
 
 bool Tetromino::isContainCoordinates(int y, int x) {
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+	for (int i = DEFAULT_VALUE; i < points.size(); i++) {
 		if (points[i].isEqual(x, y))
 			return true;
 	}
@@ -62,9 +61,13 @@ void Tetromino::setYCoordinate(int index, int y) {
 	points[index].setYValue(y);
 }
 
+void Tetromino::setPointsArraySize(const size_t size) {
+	points.resize(size);
+}
 
-
-
+size_t Tetromino::getVecSize() const {
+	return points.size();
+}
 
 
 

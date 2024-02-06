@@ -2,17 +2,23 @@
 #define __TETROMINO_H
 
 #include "Point.h"
+#include <Vector>
+#include <iostream>
+
+#define DEFAULT_VALUE 0
+
+using namespace std;
 
 class Tetromino
 {
-	static constexpr int NUMBER_OF_POINTS = 4;
-	Point points[NUMBER_OF_POINTS];
+	vector<Point> points;
 	bool isMoving = false;
 	int shape;
 
 public:
 	//here will be default empty c-tor for a Tetromino object by the compiler
-	Tetromino() = default;
+	Tetromino() : shape(DEFAULT_VALUE) {};
+
 	// Set Methods
 	void setXCoordinates(int x1, int x2, int x3, int x4);
 	void setXCoordinate(int index, int x);
@@ -20,11 +26,13 @@ public:
 	void setYCoordinate(int index, int y);
 	void setIsMoving(bool state);
 	void setShape(int shape);
+	void setPointsArraySize(const size_t size);
 
 	// Get Methods
-	int getXCoordinate(int index);
-	int getYCoordinate(int index);
-	int getShape();
+	int getXCoordinate(int index) const;
+	int getYCoordinate(int index) const;
+	int getShape() const;
+	size_t getVecSize() const;
 	bool getIsMoving() const;
 
 	// This method checks if both x and y coordinate is in its arrays

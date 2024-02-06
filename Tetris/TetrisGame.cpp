@@ -27,7 +27,7 @@ void TetrisGame::game() {
 	char keyPressed = DEFAULT_VALUE;
 
 	while (keyPressed != EXIT_GAME) {
-		// Show menu and get key input
+		// Show menu and get key input from the user
 		keyPressed = showMenu();
 
 		// Move the user to the next section according to his decision
@@ -124,9 +124,6 @@ void TetrisGame::showInstructions() const {
 }
 
 void TetrisGame::initGame() {
-	char keyPressed = DEFAULT_VALUE;
-	int playerPressed = DEFAULT_VALUE;
-	
 	// Clear console screen
 	clearScreen();
 
@@ -135,70 +132,36 @@ void TetrisGame::initGame() {
 		initBoards();
 		isGameOn = true;
 	}
-		
+	
+	// Check if one of the tetrominos is not moving and act accordingly. 
 	while (true) {
-		// Add new tetrominos to players if their tetrominos are not moving
-		if (!boards[PLAYER1].isTetrominoMoving())
-		{
-			if (!boards[PLAYER1].isPlayerLost())
-			{   
-				boards[PLAYER1].updateScoreOfPlayer(STARTING_SCORE);
-				boards[PLAYER1].removeFullLines();
-				boards[PLAYER1].addTetromino();
-			}
-		}
-
-		if (!boards[PLAYER2].isTetrominoMoving())
-		{
-			if (!boards[PLAYER2].isPlayerLost())
+		for (int player = PLAYER1; player < NUM_OF_PLAYERS; ++player) {
+			if (!boards[player].isTetrominoMoving())
 			{
-				boards[PLAYER2].updateScoreOfPlayer(STARTING_SCORE);
-				boards[PLAYER2].removeFullLines();
-				boards[PLAYER2].addTetromino();
-			}
-		}
-
-		// Print players' boards
-		boards[PLAYER1].printBoard(GameConfig::FIRST_BOARD_X, GameConfig::FIRST_BOARD_Y);
-		boards[PLAYER2].printBoard(GameConfig::SECOND_BOARD_X, GameConfig::SECOND_BOARD_Y);
-		
-		// Check if there is space below the tetrominos. if not, the function will stop them from moving
-		boards[PLAYER1].spaceBelowTetromino();
-		boards[PLAYER2].spaceBelowTetromino();
-
-		// Pull tetrominos down every 2 seconds
-		boards[PLAYER1].moveTetrominoDown();
-		boards[PLAYER2].moveTetrominoDown();
-
-		// Check for key press and navigate to the right function
-		if (_kbhit())
-		{
-			// Get key pressed
-			keyPressed = _getch();
-
-			// If player pressed escape, we show return to the main menu.
-			if (keyPressed == ESC)
-				return;
-
-			// Check who pressed the key
-			playerPressed = whoPressed(keyPressed);
-
-			// Check if the player who pressed the key has a moving tetromino
-			if (boards[playerPressed].isTetrominoMoving())
-			{
-				// Perform movement action
-				if (playerPressed == PLAYER1 || playerPressed == PLAYER2) {
-					boards[playerPressed].performAction(keyPressed, playerPressed);
+				if (!boards[player].isPlayerLost())
+				{
+					boards[player].updateScoreOfPlayer(STARTING_SCORE);
+					boards[player].removeFullLines();
+					boards[player].addTetromino();
 				}
 			}
 		}
+		
+		// Print players' boards
+		boards[PLAYER1].setupAllAndPrintBoard(GameConfig::FIRST_BOARD_X, GameConfig::FIRST_BOARD_Y);
+		boards[PLAYER2].setupAllAndPrintBoard(GameConfig::SECOND_BOARD_X, GameConfig::SECOND_BOARD_Y);
 
-		// Check if one of the player lost
-		if (boards[PLAYER1].isPlayerLost() || boards[PLAYER2].isPlayerLost())
-		{
-			endGame();
-			return;
-		}
+		// Check if there is space below the tetrominos. if not, the function will stop them from moving
+		isSpaceBelowTetrominos();
+
+		// Move tetrominos down if there is space below them
+		moveTetrominosDown();
+
+		// Check for key press and navigate to the right function
+		getKeyAndPerformAction();
+
+		// Check if one of the players lost
+		isLost();
 
 		// Put delay for humans
 		Sleep(GameConfig::GAME_TIME);
@@ -306,3 +269,51 @@ void TetrisGame::initBoards() {
 	}
 }
 
+void TetrisGame::isLost() {
+	if (boards[PLAYER1].isPlayerLost() || boards[PLAYER2].isPlayerLost())
+	{
+		endGame();
+		return;
+	}
+}
+
+inline void TetrisGame::getKeyAndPerformAction() {
+	char keyPressed = DEFAULT_VALUE;
+	int playerPressed = DEFAULT_VALUE;
+
+	// Check for key press and navigate to the right function
+	if (_kbhit())
+	{
+		// Get key pressed
+		keyPressed = _getch();
+
+		// If player pressed escape, we show return to the main menu.
+		if (keyPressed == ESC)
+			return;
+
+		// Check who pressed the key
+		playerPressed = whoPressed(keyPressed);
+
+		// Check if the player who pressed the key has a moving tetromino
+		if (boards[playerPressed].isTetrominoMoving())
+		{
+			// Perform movement action
+			if (playerPressed == PLAYER1 || playerPressed == PLAYER2) {
+				boards[playerPressed].performAction(keyPressed, playerPressed);
+			}
+		}
+	}
+}
+
+void TetrisGame::isSpaceBelowTetrominos() {
+	// Check if there is space below the tetrominos. if not, the function will stop them from moving
+	for (int player = PLAYER1; player < NUM_OF_PLAYERS; ++player) {
+		boards[player].spaceBelowTetromino();
+	}
+}
+
+void TetrisGame::moveTetrominosDown() {
+	for (int player = PLAYER1; player < NUM_OF_PLAYERS; ++player) {
+		boards[player].moveTetrominoDown();
+	}
+}

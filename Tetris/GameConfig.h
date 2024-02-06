@@ -8,7 +8,7 @@ class GameConfig
 public:
 	enum class eShapes
 	{
-		Straight = 1, Square, TShaped, LShaped, SShaped, JShaped, ZShaped
+		Straight = 1, Square, TShaped, LShaped, SShaped, JShaped, ZShaped, Bomb
 	};
 	
 	static constexpr int GAME_WIDTH = 12;

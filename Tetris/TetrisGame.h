@@ -5,7 +5,7 @@
 
 class TetrisGame
 {
-	static constexpr int NUM_OF_BOARDS = 3;
+	static constexpr int NUM_OF_BOARDS = 2;
 	Board boards[NUM_OF_BOARDS];
 	bool isGameOn = false;
 
@@ -30,6 +30,18 @@ class TetrisGame
 
 	//This method presents the user with the option to play with colors or not and get the user's choice
 	bool playWithColor() const;
+
+	// This method ends the game if one of the players has lost
+	void isLost();
+
+	// This method handles key presses and moves to the
+	void getKeyAndPerformAction();
+
+	// This method moves the tetrominos one line down if there is space
+	void moveTetrominosDown();
+
+	// This method checks if there is space below the two tetrominos. if not, they will stop
+	void isSpaceBelowTetrominos();
 
 public:
 	// This is the main method of the game,
