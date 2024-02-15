@@ -73,6 +73,10 @@ public:
 
 	// Delete copy constructor
 	TetrisGame(const TetrisGame&) = delete;
+
+	//yarden
+	void setMove();
+
 };
 
 #endif

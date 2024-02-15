@@ -17,16 +17,9 @@ class Board
 	int backgroundColor;
 	bool isColor;
 
-	// Tetromino movement methods
-	void turnTetrominoLeftOrRight(int direction);
-	void turnTetrominoClockwise(int num);
-	void dropTetromino();
-
+	
 	// This method clears a certain blocks according to X and Y coordinates
 	void clearBlocks();
-
-	// This method checks if a line is full
-	bool isLineFull(int y) const;
 	
 	// This method deletes a line from the board
 	void makeLineEmpty(int y);
@@ -114,6 +107,20 @@ public:
 
 	// This function moves all of the points above a certain point down, untill the point above it hits empty char or border
 	void moveAboveDown(int x, int y);
+
+	//******************************************** moved from private:
+	// Tetromino movement methods
+	void turnTetrominoLeftOrRight(int direction);
+	void turnTetrominoClockwise(int num);
+	void dropTetromino();
+
+	// This method checks if a line is full
+	bool isLineFull(int y) const;
+
+	///*******************************************new yarden
+	int getNumOfSpaceInLine(int line);
+
+
 };
 
 #endif

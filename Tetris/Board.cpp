@@ -78,17 +78,18 @@ void Board::addTetromino() {
 	currentTetromino.setIsMoving(true);
 	
 	// Decide if the next tetromino will be a bomb or not
-	if (isBomb()) {
-		currentTetromino.setShape((int)GameConfig::eShapes::Bomb);
-		currentTetromino.setPointsArraySize(BOMB_POINTS_ARRAY);
-		currentTetromino.setXCoordinate(FIRST_INDEX, 5);
-		currentTetromino.setYCoordinate(FIRST_INDEX, 1);
-		setBackgroundColor(GameConfig::COLORS[1]); // For Jordan To Work On
-		return;
-	}
+	//if (isBomb()) {
+	//	currentTetromino.setShape((int)GameConfig::eShapes::Bomb);
+	//	currentTetromino.setPointsArraySize(BOMB_POINTS_ARRAY);
+	//	currentTetromino.setXCoordinate(FIRST_INDEX, 5);
+	//	currentTetromino.setYCoordinate(FIRST_INDEX, 1);
+	//	setBackgroundColor(GameConfig::COLORS[1]); // For Jordan To Work On
+	//	return;
+	//}
 	
 	// If not a bomb, Generate a random number between 1 and 7 that will decide the shape
-	GameConfig::eShapes shape = (GameConfig::eShapes)(rand() % 7 + 1);
+	//GameConfig::eShapes shape = (GameConfig::eShapes)(rand() % 7 + 1);
+	GameConfig::eShapes shape = (GameConfig::eShapes::TShaped);
 	currentTetromino.setPointsArraySize(NORMAL_SHAPE_ARRAY);
 	currentTetromino.setShape((int)shape);
 
@@ -651,4 +652,21 @@ void Board::moveAboveDown(int x, int y) {
 
 		ind++;
 	}
+
+}
+
+///**************************************************************************yarden
+
+int Board::getNumOfSpaceInLine(int line)
+{
+	int res = 0;
+	for (int i = 1; i < GameConfig::GAME_WIDTH - 1; i++)
+	{
+		if (gameBoard[line][i] == EMPTY_CHAR)
+		{
+			res++;
+		}
+	}
+	return res;
+
 }

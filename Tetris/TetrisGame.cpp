@@ -178,7 +178,25 @@ void TetrisGame::initGame() {
 		// Move tetrominos down if there is space below them
 		moveTetrominosDown();
 
-		// Check for key press and navigate to the right function. if user pressed escape the game will pause
+		//to Tal from Yarden
+		//Just so that the program can run now - you can download after polymorphism.
+		//If you recognize that don't tell me and make it nicer
+		//int counter = 0;
+		int counter = 0;
+		for (auto& currComputer : computerPlayersArray)
+		{
+			// if humen vs comuter - computer = player 2
+	        // if computer vs comuter computerPlayersArray[1] IS PLAYER2) 
+	        // in both of the we need to Match the characters because they are matched to player 1
+	        // Just to match the current program - delete after polymorphism:
+			counter++;
+			if ((gameMode == HUMAN_VS_COMPUTER) || (gameMode == COMPUTER_VS_COMPUTER && counter == 2))
+			{
+				currComputer.updateKeysForPlayer2();
+			}
+		}
+			
+			// Check for key press and navigate to the right function. if user pressed escape the game will pause
 		if (getKeyAndPerformAction())
 			return;
 
@@ -280,27 +298,63 @@ bool TetrisGame::getKeyAndPerformAction() {
 	char keyPressed = DEFAULT_VALUE;
 	int playerPressed = DEFAULT_VALUE;
 
-	// Check for key press and navigate to the right function
-	if (_kbhit())
+	//update Humen 
+	for (auto& currPlayer : humanPlayersArray)
 	{
-		// Get key pressed
-		keyPressed = _getch();
 
-		// If player pressed escape, we shall return to the main menu.
-		if (keyPressed == ESC)
-			return true;
-
-		// Check who pressed the key
-		playerPressed = whoPressed(keyPressed);
-
-		// Check if the player who pressed the key has a moving tetromino
-		isTetrominoMoving = isPressedTetrominoMoving(playerPressed);
-
-		if (isTetrominoMoving)
+		// Check for key press and navigate to the right function
+		if (_kbhit())
 		{
-			navigateToPerformAction(keyPressed, playerPressed);
+			// Get key pressed
+			keyPressed = _getch();
+
+			// If player pressed escape, we shall return to the main menu.
+			if (keyPressed == ESC)
+				return true;
+
+			// Check who pressed the key
+			playerPressed = whoPressed(keyPressed);
+
+			// Check if the player who pressed the key has a moving tetromino
+			isTetrominoMoving = isPressedTetrominoMoving(playerPressed);
+
+			if (isTetrominoMoving)
+			{
+				navigateToPerformAction(keyPressed, playerPressed);
+			}
 		}
 	}
+		
+	//line 310 + 313: Just to match the current program - delete after polymorphism
+	int counter = 0;
+	for (auto& currComputer : computerPlayersArray)
+	{
+		if (_kbhit())
+		{
+			// Get key pressed
+			keyPressed = _getch();
+
+			// If player pressed escape, we shall return to the main menu.
+			if (keyPressed == ESC)
+				return true;
+		}
+
+		keyPressed = currComputer.getKey();
+		if (keyPressed)
+		{
+			playerPressed = whoPressed(keyPressed);
+
+			// Check if the player who pressed the key has a moving tetromino
+			isTetrominoMoving = isPressedTetrominoMoving(playerPressed);
+
+			if (isTetrominoMoving)
+			{
+				navigateToPerformAction(keyPressed, playerPressed);
+			}
+		}
+	}
+
+
 
 	return false;
 }
@@ -356,10 +410,10 @@ void TetrisGame::navigateToPerformAction(char keyPressed, int playerPressed) {
 	case HUMAN_VS_HUMAN: // Human vs Human game
 		// Perform movement action
 		if (playerPressed == PLAYER1) {
-			//humanPlayersArray[PLAYER1].performAction(keyPressed, playerPressed); 
+			humanPlayersArray[PLAYER1].performAction(keyPressed, playerPressed); 
 		}
 		if (playerPressed == PLAYER2) {
-			//humanPlayersArray[PLAYER2].performAction(keyPressed, playerPressed);
+			humanPlayersArray[PLAYER2].performAction(keyPressed, playerPressed);
 		}
 		break;
 	case HUMAN_VS_COMPUTER: // Human vs Computer game
@@ -374,10 +428,10 @@ void TetrisGame::navigateToPerformAction(char keyPressed, int playerPressed) {
 	case COMPUTER_VS_COMPUTER: // Computer vs Computer game
 		// Perform movement action
 		if (playerPressed == PLAYER1) {
-			//computerPlayersArray[PLAYER1].performAction(keyPressed, playerPressed);
+			computerPlayersArray[PLAYER1].performAction(keyPressed, playerPressed);
 		}
 		if (playerPressed == PLAYER2) {
-			//computerPlayersArray[PLAYER2].performAction(keyPressed, playerPressed);
+			computerPlayersArray[PLAYER2].performAction(keyPressed, playerPressed);
 		}
 		break;
 	default:
@@ -424,12 +478,18 @@ void TetrisGame::updateScoresRemoveLinesAddTetromino() {
 	{
 		Board& currBoard = currComputer.getBoard();
 		if (!currBoard.isTetrominoMoving())
-		{
+		{   		
+			//tal - check why return false in the first run of the game after initBaorde();
 			if (!currBoard.isPlayerLost())
-			{
+			{   
+				//FORNOW
+	            currBoard.setupAllAndPrintBoard(GameConfig::FIRST_BOARD_X, GameConfig::FIRST_BOARD_Y);
+	            currBoard.setupAllAndPrintBoard(GameConfig::SECOND_BOARD_X, GameConfig::SECOND_BOARD_Y);
+
 				currBoard.updateScoreOfPlayer(STARTING_SCORE);
 				currBoard.removeFullLines();
 				currBoard.addTetromino();
+				currComputer.setmove();
 			}
 		}
 	}
@@ -506,3 +566,5 @@ bool TetrisGame::isPressedTetrominoMoving(int playerPressed) {
 	}
 	return false;
 }
+
+
