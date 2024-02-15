@@ -88,8 +88,9 @@ void Board::addTetromino() {
 	//}
 	
 	// If not a bomb, Generate a random number between 1 and 7 that will decide the shape
-	//GameConfig::eShapes shape = (GameConfig::eShapes)(rand() % 7 + 1);
-	GameConfig::eShapes shape = (GameConfig::eShapes::TShaped);
+	GameConfig::eShapes shape = (GameConfig::eShapes)(rand() % 7 + 1);
+	//FORNOW
+	//GameConfig::eShapes shape = (GameConfig::eShapes::TShaped);
 	currentTetromino.setPointsArraySize(NORMAL_SHAPE_ARRAY);
 	currentTetromino.setShape((int)shape);
 
