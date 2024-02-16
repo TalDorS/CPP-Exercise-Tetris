@@ -23,6 +23,6 @@ int Point::getX() const {
 	return this->xValue;
 }
 
-int Point::getY() const{
+int Point::getY() const {
 	return this->yValue;
 }

@@ -1,6 +1,7 @@
 #include "Tetromino.h"
 
 #define DEFAULT_VALUE 0
+#define NUM_OF_COORDINATES 4
 #define FIRST 0
 #define SECOND 1
 #define THIRD 2
@@ -36,8 +37,8 @@ int Tetromino::getYCoordinate(int index) const {
 	return points[index].getY();
 }
 
-bool Tetromino::isContainCoordinates(int y, int x) {
-	for (int i = DEFAULT_VALUE; i < points.size(); i++) {
+bool Tetromino::isContainCoordinates(int y, int x) const {
+	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
 		if (points[i].isEqual(x, y))
 			return true;
 	}
@@ -45,12 +46,12 @@ bool Tetromino::isContainCoordinates(int y, int x) {
 	return false;
 }
 
-bool Tetromino::getIsMoving() const{
+bool Tetromino::getIsMoving() const {
 	return isMoving;
 }
 
 void Tetromino::setIsMoving(bool state) {
-	isMoving = state; 
+	isMoving = state;
 }
 
 void Tetromino::setXCoordinate(int index, int x) {
@@ -61,13 +62,13 @@ void Tetromino::setYCoordinate(int index, int y) {
 	points[index].setYValue(y);
 }
 
+//****************************************** new function of Tal for the bomb
+
 void Tetromino::setPointsArraySize(const size_t size) {
 	points.resize(size);
 }
 
+
 size_t Tetromino::getVecSize() const {
 	return points.size();
 }
-
-
-

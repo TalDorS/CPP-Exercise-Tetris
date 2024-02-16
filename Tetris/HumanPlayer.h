@@ -6,16 +6,18 @@
 class HumanPlayer
 {
 	Board board;
-
 public:
-	// This function sets up the Human player's board
-	void setupBoard(const bool isColor);
-
 	// Get Methods 
 	// Get Board method can't be const because we make changes to its byRef return value
 	Board& getBoard();
 
-	void performAction(char keyPressed, int playerNumber);
+	//char getKey(int player);
+	//char checkKey(char key, int player);
+
+
+	void getKeyAndPerformAction(int  playerPressed, char keyPressed = 0);
+
+
 
 };
 

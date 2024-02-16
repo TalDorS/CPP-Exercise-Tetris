@@ -10,7 +10,7 @@ public:
 	{
 		Straight = 1, Square, TShaped, LShaped, SShaped, JShaped, ZShaped, Bomb
 	};
-	
+
 	static constexpr int GAME_WIDTH = 12;
 	static constexpr int GAME_HEIGHT = 18;
 	static constexpr int GAME_TIME = 200;

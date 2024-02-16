@@ -29,16 +29,18 @@ int Move::minNumOfSpaces() const
 
 int Move::moveLen() const
 {
-  return strlen(move);
+	return strlen(move);
 }
 
 
 void Move::printMove()
 {
 
-	for (int i =0;  i< moveLen();i++)
+	for (int i = 0; i < moveLen(); i++)
 	{
 		cout << move[i] << ' ';;
 	}
 
 }
+
+

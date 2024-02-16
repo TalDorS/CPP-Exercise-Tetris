@@ -17,8 +17,7 @@ class Tetromino
 
 public:
 	//here will be default empty c-tor for a Tetromino object by the compiler
-	Tetromino() : shape(DEFAULT_VALUE) {};
-
+	Tetromino() = default;
 	// Set Methods
 	void setXCoordinates(int x1, int x2, int x3, int x4);
 	void setXCoordinate(int index, int x);
@@ -26,17 +25,22 @@ public:
 	void setYCoordinate(int index, int y);
 	void setIsMoving(bool state);
 	void setShape(int shape);
-	void setPointsArraySize(const size_t size);
 
 	// Get Methods
 	int getXCoordinate(int index) const;
 	int getYCoordinate(int index) const;
 	int getShape() const;
-	size_t getVecSize() const;
 	bool getIsMoving() const;
 
 	// This method checks if both x and y coordinate is in its arrays
-	bool isContainCoordinates(int x, int y);
+	bool isContainCoordinates(int x, int y) const;
+
+
+	//****************************************** new function of Tal for the bomb
+	void setPointsArraySize(const size_t size);
+
+	size_t getVecSize() const;
+
 };
 
 #endif
