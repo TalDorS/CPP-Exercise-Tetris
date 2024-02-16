@@ -1,6 +1,7 @@
 #include "ComputerPlayer.h"
 #include "General.h"
 
+#define DEFAULT_VALUE 0
 #define CLOCKWISE 1
 #define COUNTERCLOCKWISE -1
 #define LEFT -1
@@ -115,7 +116,8 @@ void ComputerPlayer::createFirstMove()
 
 void ComputerPlayer::setIsLineFull(Move& move)
 {
-	for (int i = 0; i < 4; i++) {
+	size_t numOfCoordinates = board.getCurrentTetrominoVecSize();
+	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++) {
 		if (board.isLineFull(board.getCurrentTetromino().getYCoordinate(i)))
 		{
 			move.setIsLineFull(true);
@@ -127,22 +129,22 @@ void ComputerPlayer::setIsLineFull(Move& move)
 
 void ComputerPlayer::setRows(Board& curBoard, Move& curMove)
 {
-
-	for (int i = 0; i < 4; i++)
+	size_t numOfCoordinates = board.getCurrentTetrominoVecSize();
+	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++)
 	{
 		int row = curBoard.getCurrentTetromino().getYCoordinate(i);
 		curMove.setRow(i, row);
 
 	}
-	bubbleSort(curMove.getRowsAddress(), 4);
+	bubbleSort(curMove.getRowsAddress(), numOfCoordinates);
 
 
 }
 
 void ComputerPlayer::setSpaceInRows(Board& curBoard, Move& curMove)
 {
-
-	for (int i = 0; i < 4; i++)
+	size_t numOfCoordinates = board.getCurrentTetrominoVecSize();
+	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++)
 	{
 		int numOfSpaces = curBoard.getNumOfSpaceInLine(curMove.getRow(i));
 		curMove.setSpaceInRow(i, numOfSpaces);
@@ -303,8 +305,9 @@ void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 
 int ComputerPlayer::minX() const
 {
+	size_t numOfCoordinates = board.getCurrentTetrominoVecSize();
 	int res = board.getCurrentTetromino().getXCoordinate(0);
-	for (int i = 1; i < 4; i++)
+	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++)
 	{
 		if (res > board.getCurrentTetromino().getXCoordinate(i))
 		{

@@ -1,7 +1,6 @@
 #include "Tetromino.h"
 
 #define DEFAULT_VALUE 0
-#define NUM_OF_COORDINATES 4
 #define FIRST 0
 #define SECOND 1
 #define THIRD 2
@@ -38,7 +37,8 @@ int Tetromino::getYCoordinate(int index) const {
 }
 
 bool Tetromino::isContainCoordinates(int y, int x) const {
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+	size_t vecSize = this->getVecSize();
+	for (int i = DEFAULT_VALUE; i < vecSize; i++) {
 		if (points[i].isEqual(x, y))
 			return true;
 	}

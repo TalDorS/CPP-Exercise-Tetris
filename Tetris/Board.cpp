@@ -80,14 +80,14 @@ void Board::addTetromino() {
 	currentTetromino.setIsMoving(true);
 
 	// Decide if the next tetromino will be a bomb or not
-	/*if (isBomb()) {
+	if (isBomb()) {
 		currentTetromino.setShape((int)GameConfig::eShapes::Bomb);
 		currentTetromino.setPointsArraySize(BOMB_POINTS_ARRAY);
 		currentTetromino.setXCoordinate(FIRST_INDEX, 5);
 		currentTetromino.setYCoordinate(FIRST_INDEX, 1);
-		setBackgroundColor(GameConfig::COLORS[8]); // For Jordan To Work On
+		setBackgroundColor(GameConfig::COLORS[8]);
 		return;
-	}*/
+	}
 
 	// If not a bomb, Generate a random number between 1 and 7 that will decide the shape
 	GameConfig::eShapes shape = (GameConfig::eShapes)(rand() % 7 + 1);
@@ -137,7 +137,7 @@ void Board::addTetromino() {
 		break;
 	}
 
-	// Add coordinates value to tetromino
+	//// Add coordinates value to tetromino
 	currentTetromino.setIsMoving(true);
 }
 
@@ -271,9 +271,10 @@ bool Board::isTetrominoMoving() const {
 void Board::turnTetrominoLeftOrRight(int num) {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
+	size_t numOfCordinates = currentTetromino.getVecSize();
 
 	// Check for collision
-	for (int i = DEFAULT_VALUE; i < NUM_OF_PLAYERS; i++) {
+	for (int i = DEFAULT_VALUE; i < numOfCordinates; i++) {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 
@@ -289,7 +290,7 @@ void Board::turnTetrominoLeftOrRight(int num) {
 	clearBlocks();
 
 	// Move left
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+	for (int i = DEFAULT_VALUE; i < numOfCordinates; i++) {
 		x = currentTetromino.getXCoordinate(i);
 
 		currentTetromino.setXCoordinate(i, x + num);
@@ -351,7 +352,6 @@ void Board::dropTetromino() {
 		// Drop tetromino
 		for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++) {
 			y = currentTetromino.getYCoordinate(i);
-
 			currentTetromino.setYCoordinate(i, y + 1);
 		}
 	}
@@ -363,8 +363,10 @@ void Board::dropTetromino() {
 void Board::clearBlocks() {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
+	size_t numOfCoordinates = currentTetromino.getVecSize();
 
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+
+	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++) {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 
@@ -409,8 +411,9 @@ void Board::makeLineEmpty(int y) {
 void Board::moveTetrominoDown() {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
+	size_t numOfCoordinates = currentTetromino.getVecSize();
 
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++) {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 
@@ -424,7 +427,7 @@ void Board::moveTetrominoDown() {
 	clearBlocks();
 
 	// move tetromino down
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++) {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 
@@ -438,9 +441,10 @@ void Board::printTetromino() {
 	// Add tetromino to board
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
+	size_t numOfCoordinates = currentTetromino.getVecSize();
 	int backGroundColor = getBackgroundColor();
 
-	for (int i = DEFAULT_VALUE; i < NUM_OF_COORDINATES; i++) {
+	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++) {
 		x = currentTetromino.getXCoordinate(i);
 		y = currentTetromino.getYCoordinate(i);
 		gameBoard[y][x] = GameConfig::TETROMINO_CHAR;
@@ -682,4 +686,8 @@ void Board::moveAboveDown(int x, int y) {
 		ind++;
 	}
 
+}
+
+size_t Board::getCurrentTetrominoVecSize() const {
+	return this->currentTetromino.getVecSize();
 }

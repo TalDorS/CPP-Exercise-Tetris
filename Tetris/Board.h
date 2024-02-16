@@ -63,6 +63,7 @@ public:
 	//get Methods
 	int getBackgroundColor() const;
 	int getScore() const;
+	size_t getCurrentTetrominoVecSize() const;
 
 
 	// This method initalizes a board, with a border and empty interior
