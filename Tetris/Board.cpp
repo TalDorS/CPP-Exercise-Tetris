@@ -22,6 +22,9 @@
 #define BOMB_POINTS_ARRAY 1
 #define NORMAL_SHAPE_ARRAY 4
 #define FIRST_INDEX 0
+#define ONE 1
+#define MAX_BLAST_RADIUS_LEFT -4
+#define MAX_BLAST_RADIUS_RIGHT 5
 
 using namespace std;
 
@@ -50,27 +53,6 @@ void Board::initBoard() {
 			else
 				gameBoard[i][j] = EMPTY_CHAR;
 		}
-	}
-}
-
-//not const
-void Board::printBoard(int x, int y) {
-	// Print message above the boards
-	gotoxy(GameConfig::TETRIS_MSG_X, GameConfig::TETRIS_MSG_Y);
-	cout << "TETRIS";
-
-	// Print players' scores
-	printScore(x, y);
-
-	// Print tetromino characters
-	printTetromino();
-
-	// Print board according to user's choice of colors
-	if (isColor) {
-		printWithColors(x, y);
-	}
-	else {
-		printWithoutColors(x, y);
 	}
 }
 
@@ -520,6 +502,26 @@ void Board::whatColor(int color) const
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
+void Board::setupAllAndPrintBoard(int x, int y) {
+	// Print message above the boards
+	gotoxy(GameConfig::TETRIS_MSG_X, GameConfig::TETRIS_MSG_Y);
+	cout << "TETRIS";
+
+	// Print players' scores
+	printScore(x, y);
+
+	// Print tetromino characters
+	printTetromino();
+
+	// Print board according to user's choice of colors
+	if (isColor) {
+		printBoardWithColors(x, y);
+	}
+	else {
+		printBoardWithoutColors(x, y);
+	}
+}
+
 //not const
 void Board::initColorByLocation()
 {
@@ -546,7 +548,7 @@ int Board::getBackgroundColor() const
 	return backgroundColor;
 }
 
-void Board::printWithColors(int x, int y) const
+void Board::printBoardWithColors(int x, int y) const
 {
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++) {
 		for (int j = DEFAULT_VALUE; j < GameConfig::GAME_WIDTH; j++) {
@@ -568,7 +570,7 @@ void Board::printWithColors(int x, int y) const
 	}
 }
 
-void Board::printWithoutColors(int x, int y) const
+void Board::printBoardWithoutColors(int x, int y) const
 {
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++) {
 		for (int j = DEFAULT_VALUE; j < GameConfig::GAME_WIDTH; j++) {
@@ -670,65 +672,78 @@ void Board::explodeBomb() {
 	bool moveDown2 = false;
 	bool moveDown3 = false;
 
-	// For the (x-1,y+i) points
-	for (int i = -1; i < 2; i++) {
-		if (gameBoard[y + i][x - 1] != GameConfig::BOARD_BORDER_CHAR) {
-			gameBoard[y + i][x - 1] = EMPTY_CHAR;
-			//update the line to background color black
-			updateColorByLocation(y + i, x - 1, GameConfig::COLORS[0]);
+	// Bomb explosion
+	for (int i = 4; i > -5; i--) { // Go from bottom to up in the y-axis
+		for (int j = MAX_BLAST_RADIUS_LEFT; j < MAX_BLAST_RADIUS_RIGHT; j++) {
+			if (isInBoard(x + j, y + i)) {
+				if (gameBoard[y + i][x + j] == GameConfig::TETROMINO_CHAR) {
+					// Make Empty
+					gameBoard[y + i][x + j] = EMPTY_CHAR;
+
+					//update the cell to background color black
+					updateColorByLocation(y + i, x + j, GameConfig::COLORS[0]);
+
+					// Move every block above it down
+					if (i == MAX_BLAST_RADIUS_LEFT)
+						moveAboveDown(x + j, y + i);
+				}
+			}
 		}
 	}
-
-
-	// For the (x,y+i) points
-	for (int i = -1; i < 2; i++) {
-		if (gameBoard[y + i][x] != GameConfig::BOARD_BORDER_CHAR) {
-			moveDown2 = true;
-			gameBoard[y + i][x] = EMPTY_CHAR;
-			//update the line to background color black
-			updateColorByLocation(y + i, x, GameConfig::COLORS[0]);
-		}
-	}
-
-	// For the (x+1,y+i) points
-	for (int i = -1; i < 2; i++) {
-		if (gameBoard[y + i][x + 1] != GameConfig::BOARD_BORDER_CHAR) {
-			moveDown3 = true;
-			gameBoard[y + i][x + 1] = EMPTY_CHAR;
-			//update the line to background color black
-			updateColorByLocation(y + i, x + 1, GameConfig::COLORS[0]);
-		}
-	}
-
-	// Check if we need to move the first col down after the explosion
-	if (gameBoard[y - 2][x - 1] == GameConfig::TETROMINO_CHAR)
-		moveAboveDown(x - 1, y - 1);
-
-	// Check if we need to move the second col down after the explosion
-	if (gameBoard[y - 2][x] == GameConfig::TETROMINO_CHAR)
-		moveAboveDown(x, y - 1);
-
-	// Check if we need to move the third col down after the explosion
-	if (gameBoard[y - 2][x + 1] == GameConfig::TETROMINO_CHAR)
-		moveAboveDown(x + 1, y - 1);
 }
 
 void Board::moveAboveDown(int x, int y) {
-	int ind = 1;
-	while (gameBoard[y - ind][x] == GameConfig::TETROMINO_CHAR) {
-		// Insert above point to the lower point
-		gameBoard[y - ind + 1][x] = gameBoard[y - ind][x];
-		colorByLocation[y - ind + 1][x] = colorByLocation[y - ind][x];
+	vector<char> charArr;
+	vector<int> colorArr;
+	int height = DEFAULT_VALUE;
+	int defaultColor = getBackgroundColor();
+	int ind = 0;
 
-		// Make the above point empty
+	// Check if there is any block above to move to even start the algorithm
+	if (gameBoard[y - 1][x] != GameConfig::TETROMINO_CHAR)
+		return;
+
+	// Get the height that we'll need to get them down to
+	while (gameBoard[y + ind][x] == EMPTY_CHAR) {
+		height++;
+		ind++;
+	}
+
+	// Get the vectors of characters and colors of the cells we'd like to move down
+	ind = 1;
+	while (gameBoard[y - ind][x] == GameConfig::TETROMINO_CHAR) {
+		// Push characters and remove it from the board
+		charArr.push_back(gameBoard[y - ind][x]);
 		gameBoard[y - ind][x] = EMPTY_CHAR;
-		colorByLocation[y - ind][x] = getBackgroundColor();
+
+		// Push color and remove it from the board
+		colorArr.push_back(colorByLocation[y - ind][x]);
+		colorByLocation[y - ind][x] = defaultColor;
 
 		ind++;
 	}
 
+	// Get Vector size
+	int vecSize = charArr.size();
+
+	// Insert the vector to his new place
+	ind = 1;
+	for (int i = DEFAULT_VALUE; i < vecSize; i++) {
+		gameBoard[y + height - ind][x] = charArr[i];
+		colorByLocation[y + height - ind][x] = colorArr[i];
+		ind++;
+	}
 }
 
 size_t Board::getCurrentTetrominoVecSize() const {
 	return this->currentTetromino.getVecSize();
+}
+
+bool Board::isInBoard(int x, int y) {
+	if (x < ONE || x > GameConfig::GAME_WIDTH - 2)
+		return false;
+	if (y < ONE || y > GameConfig::GAME_HEIGHT - 2)
+		return false;
+
+	return true;
 }

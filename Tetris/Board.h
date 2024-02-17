@@ -41,14 +41,14 @@ class Board
 	//This method receives a color and a location on the board and updates the color in a colors matrix.
 	void updateColorByLocation(int x, int y, int color);
 
-
 	//This method prints the board according to the colors that are updated in a colors matrix
-	void printWithColors(int x, int y) const;
+	void printBoardWithColors(int x, int y) const;
 
 	//This method prints the board without colors
-	void printWithoutColors(int x, int y) const;
+	void printBoardWithoutColors(int x, int y) const;
 
-
+	// This method returns if a given coordinate is in the board
+	bool isInBoard(int x, int y);
 public:
 	//empty c-tor for a Board object 
 	Board();
@@ -68,9 +68,6 @@ public:
 
 	// This method initalizes a board, with a border and empty interior
 	void initBoard();
-
-	// This method prints the board and all its contents
-	void printBoard(int x, int y);
 
 	// This method adds a new tetromino to the board
 	void addTetromino();
@@ -138,6 +135,10 @@ public:
 
 	// This function moves all of the points above a certain point down, untill the point above it hits empty char or border
 	void moveAboveDown(int x, int y);
+
+	// This method prints the board and all its contents
+	// ** NOT CONSTANT BECAUSE IT CHANGES THINGS **
+	void setupAllAndPrintBoard(int x, int y);
 };
 
 #endif

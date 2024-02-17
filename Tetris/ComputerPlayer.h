@@ -1,13 +1,12 @@
 #ifndef __COMPUTER_PLAYER_H
 #define __COMPUTER_PLAYER_H
 
-#include "HumanPlayer.h"
+#include "Player.h"
 #include "Board.h"
 #include "Move.h"
 
-class ComputerPlayer
+class ComputerPlayer : public Player
 {
-	Board board;
 	Move move; // move contains the best move the computer can make and data that can help it decide which of the moves is the best.
 	int level = 0; //  the level of the computer
 
@@ -77,17 +76,15 @@ class ComputerPlayer
 	void chooseMoveForTetromino(Move& tmpMove);
 
 
-
 public:
 
 	Board& getBoard();
 
 	//setMetod
-	void setLevel(int level) { this->level = level; }
-
+	void setLevel(int level) { this->level = (int)level; }
 
 	//This method creating the computer's move according to the board and the Tetromino shape or the bomb
-	void setmove();
+	void setMove();
 
 	//This method returns the key of the computer's move at a given moment
 	void getKeyAndPerformAction(int player);
@@ -96,9 +93,11 @@ public:
 	//and initializes the first move of the computer
 	void setupBoard(bool isColor);
 
-
 	// delete this method in the end
 	//void PtintCheck(Board& tmpBoard);
+
+	virtual void getKeyAndPerformAction(int player, char keyPressed) {};
+
 };
 
 #endif

@@ -39,10 +39,10 @@ void ComputerPlayer::setupBoard(bool isColor) {
 	this->board.addTetromino();
 
 	// ***********************************yarden
-	this->setmove();
+	this->setMove();
 }
 
-void ComputerPlayer::setmove()
+void ComputerPlayer::setMove()
 {
 	//make empty move
 	move.setStep(0);
@@ -463,7 +463,6 @@ void ComputerPlayer::setnumOfExplodedCubs(Board& curBoard, Move& curMove)
 	int numOfExplodedCubs = curBoard.numOfExplodedCubs();
 	curMove.setnumOfExplodedCubs(numOfExplodedCubs);
 }
-
 
 //delete in the end
 //void ComputerPlayer::PtintCheck(Board& tmpBoard)
