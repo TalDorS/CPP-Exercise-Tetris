@@ -17,11 +17,14 @@
 #define BEST 0
 #define GOOD 40
 #define NOVICE 10
+#define MIN_COL 1
+#define SIZE_OF_TETROMINO 4
 
 
 Board& ComputerPlayer::getBoard() {
 	return this->board;
 }
+
 void ComputerPlayer::setupBoard(bool isColor) {
 	// Initialize board colors
 	this->board.setIsColor(isColor);
@@ -41,76 +44,54 @@ void ComputerPlayer::setupBoard(bool isColor) {
 
 void ComputerPlayer::setmove()
 {
-	//make emty move
+	//make empty move
 	move.setStep(0);
 	move.initMove();
 
-	//if the computer is not in level BEST	- CHECK 
-	//withing for tal to finish is part
+	//if the computer is not in level BEST	
 	if (level != BEST)
 	{
 		if (isMissMove())
 		{
 			createMissMove();
+			move.setStep(0);
 			return;
 		}
 
 	}
-	//
-
-	//if (board.isCurrentShapeBomb())
-	//{
-		//createMovesForBomb();//TODO
-	//}
-	//else
-	//{
-	createMovesForTetromino();
-	//}
-
+	createMove();
 	move.setStep(0);
-
-
 }
 
-void ComputerPlayer::createMovesForTetromino()
+void ComputerPlayer::createMove()
 {
 	createFirstMove();
-
 	createMovesAndChooseTheBest();
-
-	//FORNOW - Currently in a note - do not touch
-	//board.getCurrentTetromino().setIsMoving(true);
-	//move.setStep(0);
-
 }
 
 void ComputerPlayer::createFirstMove()
 {
 	Board tmpBoard = board;
 
-	//FORNOW
-	//PtintCheck(tmpBoard);
-
 	int index = 0;
 	int minXVal = minX();
-	while ((minXVal != 1) && (tmpBoard.spaceBelowTetromino() == true))
+	while ((minXVal != MIN_COL) && (tmpBoard.spaceBelowTetromino() == true))
 	{
 		leftStep(tmpBoard);
 		move.setCurrentStep(index, C_LEFT);
 		index++;
 		minXVal--;
-
-		//FORNOW 
-		//PtintCheck(tmpBoard);
 	}
 
 	dropStep(tmpBoard);
 	move.setCurrentStep(index, C_DROP);
 
-	//FORNOW
-	//PtintCheck(tmpBoard);
-
-	setIsLineFull_Rows_setSpaceInRows(tmpBoard, move);
+	if (board.isCurrentShapeBomb()){
+		setnumOfExplodedCubs(tmpBoard, move);
+	}
+	else {
+		setIsLineFull_Rows_setSpaceInRows(tmpBoard, move);
+	}
 
 }
 
@@ -210,8 +191,6 @@ void ComputerPlayer::createFirstsStepByTheShape(int i, Move& tmpMove, Board& tmp
 			clockWiseStep(tmpBoard);
 			tmpMove.setCurrentStep(index, C_CLOCKWISE);
 			tmpMove.setStep(index + 1);
-			//FORNOW
-			//PtintCheck(tmpBoard);
 			break;
 		case (2):
 			//first two step - twice CLOCKWISE
@@ -225,28 +204,20 @@ void ComputerPlayer::createFirstsStepByTheShape(int i, Move& tmpMove, Board& tmp
 				tmpMove.setCurrentStep(index, C_CLOCKWISE);
 				tmpMove.setStep(index + 1);
 			}
-			//FORNOW
-			//PtintCheck(tmpBoard); 
 			break;
 		case (3):
 			//first step - one time COUNTERCLOCKWISE
 			counterClockWiseStep(tmpBoard);
 			tmpMove.setCurrentStep(index, C_COUNTERCLOCKWISE);
 			tmpMove.setStep(index + 1);
-			//FORNOW
-			//PtintCheck(tmpBoard); 
 		default:
 			break;
 		}
 	}
 }
 
-
 void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 {
-	//FORNOW 
-	//PtintCheck(tmpBoard);
-
 	int minXVal = minX();
 	int index = tmpMove.getStep();
 
@@ -260,13 +231,9 @@ void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 			tmpMove.setCurrentStep(index, C_LEFT);
 			index++;
 			minXVal--;
-			//FORNOW 
-			//PtintCheck(tmpBoard);
 		}
 		dropStep(tmpBoard);
 		tmpMove.setCurrentStep(index, C_DROP);
-		//FORNOW 
-		//PtintCheck(tmpBoard);
 
 	}
 	// If the number of the column is greater than the minimum number of columns of the shape, 
@@ -279,28 +246,23 @@ void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 			tmpMove.setCurrentStep(index, C_RIGHT);
 			index++;
 			minXVal++;
-			//FORNOW 
-			//PtintCheck(tmpBoard);
 		}
 		dropStep(tmpBoard);
 		tmpMove.setCurrentStep(index, C_DROP);
-
-		//FORNOW
-		//PtintCheck(tmpBoard);
-
 	}
 	else // If the column number is equal to the minimum column of the shape DROP is done
 	{
 		dropStep(tmpBoard);
 		tmpMove.setCurrentStep(index, C_DROP);
-		//FORNOW
-		//PtintCheck(tmpBoard);
-
 	}
-	//FORNOW
-	//PtintCheck(tmpBoard);
 
-	setIsLineFull_Rows_setSpaceInRows(tmpBoard, tmpMove);
+	if (board.isCurrentShapeBomb())
+	{
+		setnumOfExplodedCubs(tmpBoard, tmpMove);
+	}
+	else {
+		setIsLineFull_Rows_setSpaceInRows(tmpBoard, tmpMove);
+	}
 }
 
 int ComputerPlayer::minX() const
@@ -320,24 +282,38 @@ int ComputerPlayer::minX() const
 
 void ComputerPlayer::chooseTheBestMove(Move& tmpMove)
 {
-	//FORNOW
-	/*clearScreen();
-	cout << " tmpMove: ";
-	tmpMove.printMove();
-	cout << " Move before: ";
-	move.printMove();*/
 
-	// If the tmpmove has a full line and there is not in move, we selected in the tmpmove to be the move;
+	if (board.isCurrentShapeBomb())
+	{
+		chooseMoveForBomb(tmpMove);
+	}
+	else
+	{
+		chooseMoveForTetromino(tmpMove);
+	}
+}
+
+void ComputerPlayer::chooseMoveForBomb(Move& tmpMove)
+{
+	//If the number of cubes exploded of tmpMove is bigger than move
+	// we will update the tmpMove to be the move
+	if (tmpMove.getnumOfExplodedCubs() > move.getnumOfExplodedCubs())
+		move = tmpMove;
+}
+
+void ComputerPlayer::chooseMoveForTetromino(Move& tmpMove)
+{
+	// If the tmpmove has a full line and there is not in move, we will update the tmpMove to be the move;
 	if (tmpMove.getIsLineFull() == true && move.getIsLineFull() == false) {
 		move = tmpMove;
 		return;
 	}
 	else
 	{
-		int i = 3;
+		int i = SIZE_OF_TETROMINO - 1;
 		if (tmpMove.getRow(i) == move.getRow(i))
 		{
-			while (tmpMove.getRow(i) == move.getRow(i) && i >= 0) 			//Is the lowest row equal?
+			while (tmpMove.getRow(i) == move.getRow(i) && i >= 0) //Is the lowest row equal?
 			{
 				//If the number of the row that the shape occupies is equal, 
 				//the one that causes the row to have less spaces is chosen.
@@ -362,12 +338,6 @@ void ComputerPlayer::chooseTheBestMove(Move& tmpMove)
 		}
 
 	}
-
-	//FORNOW
-	//cout << " Move after: ";
-	//move.printMove();
-	//clearScreen();
-
 }
 
 char ComputerPlayer::updateKeysForPlayer2(char res)
@@ -424,6 +394,7 @@ void ComputerPlayer::rightStep(Board& tmpBoard)
 	tmpBoard.moveTetrominoDown();
 	tmpBoard.turnTetrominoLeftOrRight(RIGHT);
 }
+
 void ComputerPlayer::dropStep(Board& tmpBoard)
 {
 	tmpBoard.printTetromino();
@@ -448,13 +419,6 @@ void ComputerPlayer::setIsLineFull_Rows_setSpaceInRows(Board& tmpBoard, Move& tm
 	setIsLineFull(tmpMove);
 	setRows(tmpBoard, tmpMove);
 	setSpaceInRows(tmpBoard, tmpMove);
-}
-
-//delete in the end
-void ComputerPlayer::PtintCheck(Board& tmpBoard)
-{
-	board.printBoard(GameConfig::FIRST_BOARD_X, GameConfig::FIRST_BOARD_Y);
-	tmpBoard.printBoard(GameConfig::SECOND_BOARD_X, GameConfig::SECOND_BOARD_Y);
 }
 
 bool ComputerPlayer::isMissMove() const
@@ -494,3 +458,16 @@ void ComputerPlayer::createMissMove()
 	move.setStep(0);
 }
 
+void ComputerPlayer::setnumOfExplodedCubs(Board& curBoard, Move& curMove)
+{
+	int numOfExplodedCubs = curBoard.numOfExplodedCubs();
+	curMove.setnumOfExplodedCubs(numOfExplodedCubs);
+}
+
+
+//delete in the end
+//void ComputerPlayer::PtintCheck(Board& tmpBoard)
+//{
+//	board.printBoard(GameConfig::FIRST_BOARD_X, GameConfig::FIRST_BOARD_Y);
+//	tmpBoard.printBoard(GameConfig::SECOND_BOARD_X, GameConfig::SECOND_BOARD_Y);
+//}

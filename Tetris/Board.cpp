@@ -281,7 +281,7 @@ void Board::turnTetrominoLeftOrRight(int num) {
 		if (gameBoard[y][x + num] != EMPTY_CHAR) {
 			// Collision with right border or another block, do not   
 			// Also check if an not empty block is part of the tetromino
-			if (!currentTetromino.isContainCoordinates(y, x + num))
+			if (!currentTetromino.isContainCoordinates(y, x + num) || gameBoard[y][x + num] == GameConfig::BOARD_BORDER_CHAR)
 				return;
 		}
 	}
@@ -599,7 +599,48 @@ int Board::getNumOfSpaceInLine(int line) const
 
 }
 
+int Board::numOfExplodedCubs() const
+{
+	int numOfExplodedCubs = DEFAULT_VALUE;
+	int x = currentTetromino.getXCoordinate(FIRST_INDEX);
+	int y = currentTetromino.getYCoordinate(FIRST_INDEX);
 
+	// For the (x-1,y+i) points
+	for (int i = -1; i < 2; i++) {
+		if (gameBoard[y + i][x - 1] != GameConfig::BOARD_BORDER_CHAR)
+		{
+			if (gameBoard[y + i][x - 1] == GameConfig::TETROMINO_CHAR)
+			{
+				numOfExplodedCubs++;
+			}
+
+		}
+		
+	}
+
+	// For the (x,y+i) points
+	for (int i = -1; i < 2; i++) {
+		if (gameBoard[y + i][x] != GameConfig::BOARD_BORDER_CHAR)
+		{
+			if (gameBoard[y + i][x] == GameConfig::TETROMINO_CHAR) {
+				numOfExplodedCubs++;
+			}
+		}
+		
+	}
+
+	// For the (x+1,y+i) points
+	for (int i = -1; i < 2; i++) {
+		if (gameBoard[y + i][x + 1] != GameConfig::BOARD_BORDER_CHAR)
+		{
+			if (gameBoard[y + i][x + 1] == GameConfig::TETROMINO_CHAR) {
+				numOfExplodedCubs++;
+			}
+		}
+	}
+
+	return numOfExplodedCubs;
+}
 
 
 //*****************************************************************new function for bomb from Tal
@@ -621,9 +662,8 @@ bool Board::isCurrentShapeBomb() const {
 	return false;
 }
 
-
-
 void Board::explodeBomb() {
+
 	int x = currentTetromino.getXCoordinate(FIRST_INDEX);
 	int y = currentTetromino.getYCoordinate(FIRST_INDEX);
 	bool moveDown1 = false;
@@ -638,6 +678,7 @@ void Board::explodeBomb() {
 			updateColorByLocation(y + i, x - 1, GameConfig::COLORS[0]);
 		}
 	}
+
 
 	// For the (x,y+i) points
 	for (int i = -1; i < 2; i++) {

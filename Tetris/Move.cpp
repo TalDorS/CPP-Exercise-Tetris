@@ -32,15 +32,15 @@ int Move::moveLen() const
 	return strlen(move);
 }
 
-
-void Move::printMove()
-{
-
-	for (int i = 0; i < moveLen(); i++)
-	{
-		cout << move[i] << ' ';;
-	}
-
-}
+//delete in the end
+//void Move::printMove()
+//{
+//
+//	for (int i = 0; i < moveLen(); i++)
+//	{
+//		cout << move[i] << ' ';;
+//	}
+//
+//}
 
 

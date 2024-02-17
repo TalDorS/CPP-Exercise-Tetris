@@ -117,9 +117,13 @@ public:
 	bool isLineFull(int y) const;
 
 
-	//******************************************************yarden
+	//******************************************************yarden - new methos
+
+	//This method receives a row number and returns the current number of spaces in the row
 	int getNumOfSpaceInLine(int line) const;
 
+	//This method returns the number of cubes that are going to explode at the end of a certain move of a bomb
+	int numOfExplodedCubs() const;
 
 	//*****************************************************************new function for bomb from Tal
 
@@ -134,8 +138,6 @@ public:
 
 	// This function moves all of the points above a certain point down, untill the point above it hits empty char or border
 	void moveAboveDown(int x, int y);
-
-
 };
 
 #endif

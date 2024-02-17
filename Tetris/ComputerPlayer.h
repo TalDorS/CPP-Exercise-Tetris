@@ -11,9 +11,8 @@ class ComputerPlayer
 	Move move; // move contains the best move the computer can make and data that can help it decide which of the moves is the best.
 	int level = 0; //  the level of the computer
 
-
 	//This method creates the best fit move for a type shape Tetromino.
-	void createMovesForTetromino();
+	void createMove();
 
 	//This method produces the defult move
 	void createFirstMove();
@@ -59,24 +58,33 @@ class ComputerPlayer
 	void clockWiseStep(Board& tmpBoard);
 	void counterClockWiseStep(Board& tmpBoard);
 
-
-
 	// This method gets a random number between 1 and "level" (10 or 40), and if its equal to the level its mean that new the cumputer need to miss;
 	bool isMissMove() const;
+	
 	// This method gets a random number between 1 and 2, and if its equal to 1 the next step will be to the left Otherwise there will be a step to the right
 	void createMissMove();
 
+	//get method
 	int getLevel() const { return level; }
 
+	// this Method set the number of cuns that exploded in the and of bomb move
+	void setnumOfExplodedCubs(Board& curBoard, Move& curMove);
 
-	// delete this method in the end
-	void PtintCheck(Board& tmpBoard);
+	//This method compares two moves of bomb and updates the best move of the two
+	void chooseMoveForBomb(Move& tmpMove);
+	
+	//This method compares two moves of tetromino and updates the best move of the two
+	void chooseMoveForTetromino(Move& tmpMove);
+
+
 
 public:
 
 	Board& getBoard();
 
+	//setMetod
 	void setLevel(int level) { this->level = level; }
+
 
 	//This method creating the computer's move according to the board and the Tetromino shape or the bomb
 	void setmove();
@@ -88,6 +96,9 @@ public:
 	//and initializes the first move of the computer
 	void setupBoard(bool isColor);
 
+
+	// delete this method in the end
+	//void PtintCheck(Board& tmpBoard);
 };
 
 #endif

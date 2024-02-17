@@ -174,7 +174,7 @@ void TetrisGame::initGame() {
 		// Check if there is space below the tetrominos. if not, the function will stop them from moving
 		player1.getBoard().spaceBelowTetromino();
 		player2.getBoard().spaceBelowTetromino();
-
+		
 		// Pull tetrominos down every 2 seconds
 		player1.getBoard().moveTetrominoDown();
 		player2.getBoard().moveTetrominoDown();
@@ -220,9 +220,6 @@ void TetrisGame::initGame() {
 		Sleep(GameConfig::GAME_TIME);
 	}
 }
-
-
-
 
 void TetrisGame::endGame()
 {
@@ -336,7 +333,6 @@ void TetrisGame::initBoards() {
 	player2.setmove();
 
 }
-
 
 int TetrisGame::whoPressed(char keyPressed) const {
 	if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == 'd' || keyPressed == 'D' || keyPressed == 's'
