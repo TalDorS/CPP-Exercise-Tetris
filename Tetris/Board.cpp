@@ -607,36 +607,17 @@ int Board::numOfExplodedCubs() const
 	int x = currentTetromino.getXCoordinate(FIRST_INDEX);
 	int y = currentTetromino.getYCoordinate(FIRST_INDEX);
 
-	// For the (x-1,y+i) points
-	for (int i = -1; i < 2; i++) {
-		if (gameBoard[y + i][x - 1] != GameConfig::BOARD_BORDER_CHAR)
+	for (int i = 4; i > -5; i--) 
+	{ // Go from bottom to up in the y-axis
+		for (int j = MAX_BLAST_RADIUS_LEFT; j < MAX_BLAST_RADIUS_RIGHT; j++)
 		{
-			if (gameBoard[y + i][x - 1] == GameConfig::TETROMINO_CHAR)
+			if (isInBoard(x + j, y + i))
 			{
-				numOfExplodedCubs++;
-			}
-
-		}
-		
-	}
-
-	// For the (x,y+i) points
-	for (int i = -1; i < 2; i++) {
-		if (gameBoard[y + i][x] != GameConfig::BOARD_BORDER_CHAR)
-		{
-			if (gameBoard[y + i][x] == GameConfig::TETROMINO_CHAR) {
-				numOfExplodedCubs++;
-			}
-		}
-		
-	}
-
-	// For the (x+1,y+i) points
-	for (int i = -1; i < 2; i++) {
-		if (gameBoard[y + i][x + 1] != GameConfig::BOARD_BORDER_CHAR)
-		{
-			if (gameBoard[y + i][x + 1] == GameConfig::TETROMINO_CHAR) {
-				numOfExplodedCubs++;
+				if (gameBoard[y + i][x + j] == GameConfig::TETROMINO_CHAR) 
+				{
+					numOfExplodedCubs++;
+				}
+				
 			}
 		}
 	}
@@ -739,7 +720,7 @@ size_t Board::getCurrentTetrominoVecSize() const {
 	return this->currentTetromino.getVecSize();
 }
 
-bool Board::isInBoard(int x, int y) {
+bool Board::isInBoard(int x, int y) const{
 	if (x < ONE || x > GameConfig::GAME_WIDTH - 2)
 		return false;
 	if (y < ONE || y > GameConfig::GAME_HEIGHT - 2)

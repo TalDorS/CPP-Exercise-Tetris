@@ -48,7 +48,7 @@ class Board
 	void printBoardWithoutColors(int x, int y) const;
 
 	// This method returns if a given coordinate is in the board
-	bool isInBoard(int x, int y);
+	bool isInBoard(int x, int y) const;
 public:
 	//empty c-tor for a Board object 
 	Board();

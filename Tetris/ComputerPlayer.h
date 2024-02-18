@@ -53,7 +53,7 @@ class ComputerPlayer : public Player
 	// This methods causes the next step to be to the left/right/drop/colocwise/counterClockWise
 	void leftStep(Board& tmpBoard);
 	void rightStep(Board& tmpBoard);
-	void dropStep(Board& tmpBoard);
+	void moveDown(Board& tmpBoard ,Move& curMove,int index);
 	void clockWiseStep(Board& tmpBoard);
 	void counterClockWiseStep(Board& tmpBoard);
 

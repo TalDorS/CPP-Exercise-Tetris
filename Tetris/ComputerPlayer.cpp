@@ -11,6 +11,7 @@
 #define C_CLOCKWISE 's'
 #define C_COUNTERCLOCKWISE 'w'
 #define C_DROP 'x'
+#define C_MOVE_DOWN 'h'
 #define EMPTY_CHAR ' '
 #define PLAYER1 0
 #define PLAYER2 1
@@ -83,8 +84,7 @@ void ComputerPlayer::createFirstMove()
 		minXVal--;
 	}
 
-	dropStep(tmpBoard);
-	move.setCurrentStep(index, C_DROP);
+	moveDown(tmpBoard, move, index);
 
 	if (board.isCurrentShapeBomb()){
 		setnumOfExplodedCubs(tmpBoard, move);
@@ -232,8 +232,7 @@ void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 			index++;
 			minXVal--;
 		}
-		dropStep(tmpBoard);
-		tmpMove.setCurrentStep(index, C_DROP);
+		moveDown(tmpBoard,tmpMove,index);
 
 	}
 	// If the number of the column is greater than the minimum number of columns of the shape, 
@@ -247,13 +246,11 @@ void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 			index++;
 			minXVal++;
 		}
-		dropStep(tmpBoard);
-		tmpMove.setCurrentStep(index, C_DROP);
+		moveDown(tmpBoard, tmpMove, index);
 	}
 	else // If the column number is equal to the minimum column of the shape DROP is done
 	{
-		dropStep(tmpBoard);
-		tmpMove.setCurrentStep(index, C_DROP);
+		moveDown(tmpBoard, tmpMove, index);
 	}
 
 	if (board.isCurrentShapeBomb())
@@ -395,11 +392,15 @@ void ComputerPlayer::rightStep(Board& tmpBoard)
 	tmpBoard.turnTetrominoLeftOrRight(RIGHT);
 }
 
-void ComputerPlayer::dropStep(Board& tmpBoard)
+void ComputerPlayer::moveDown(Board& tmpBoard, Move& curMove, int index)
 {
-	tmpBoard.printTetromino();
-	tmpBoard.moveTetrominoDown();
-	tmpBoard.dropTetromino();
+	while (tmpBoard.spaceBelowTetromino())
+	{
+		tmpBoard.printTetromino();
+		tmpBoard.moveTetrominoDown();
+		curMove.setCurrentStep(index, C_MOVE_DOWN);
+		index++;
+	}
 }
 
 void ComputerPlayer::clockWiseStep(Board& tmpBoard)
