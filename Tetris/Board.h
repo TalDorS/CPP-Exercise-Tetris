@@ -85,7 +85,7 @@ public:
 	bool isTetrominoMoving() const;
 
 	// This method checks if there is space below the tetromino while it's going down
-	bool spaceBelowTetromino();
+	bool spaceBelowTetromino(bool isComputerCheck);
 
 	// This method gets the current tetromino
 	Tetromino getCurrentTetromino() const;

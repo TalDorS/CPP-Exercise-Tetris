@@ -5,6 +5,8 @@
 #include "Board.h"
 #include "Move.h"
 
+#define EMPTY_CHAR ' '
+
 class ComputerPlayer : public Player
 {
 	Move move; // move contains the best move the computer can make and data that can help it decide which of the moves is the best.
@@ -87,7 +89,7 @@ public:
 	void setMove();
 
 	//This method returns the key of the computer's move at a given moment
-	void getKeyAndPerformAction(int player);
+	void getKeyAndPerformAction(int player, char keyPressed);
 
 	//This method initializes the board data at the beginning of the game
 	//and initializes the first move of the computer
@@ -95,8 +97,6 @@ public:
 
 	// delete this method in the end
 	//void PtintCheck(Board& tmpBoard);
-
-	virtual void getKeyAndPerformAction(int player, char keyPressed) {};
 
 };
 

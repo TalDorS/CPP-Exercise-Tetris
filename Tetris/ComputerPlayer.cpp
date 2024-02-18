@@ -76,7 +76,7 @@ void ComputerPlayer::createFirstMove()
 
 	int index = 0;
 	int minXVal = minX();
-	while ((minXVal != MIN_COL) && (tmpBoard.spaceBelowTetromino() == true))
+	while ((minXVal != MIN_COL) && (tmpBoard.spaceBelowTetromino(true) == true))
 	{
 		leftStep(tmpBoard);
 		move.setCurrentStep(index, C_LEFT);
@@ -182,7 +182,7 @@ void ComputerPlayer::createFirstsStepByTheShape(int i, Move& tmpMove, Board& tmp
 	tmpBoard.printTetromino();
 	tmpMove.setStep(0);// make share we are in move[0]
 
-	if (tmpBoard.spaceBelowTetromino() == true)
+	if (tmpBoard.spaceBelowTetromino(true) == true)
 	{
 		switch (i)
 		{
@@ -197,7 +197,7 @@ void ComputerPlayer::createFirstsStepByTheShape(int i, Move& tmpMove, Board& tmp
 			clockWiseStep(tmpBoard);
 			tmpMove.setCurrentStep(index, C_CLOCKWISE);
 			tmpMove.setStep(index + 1);
-			if (tmpBoard.spaceBelowTetromino() == true)
+			if (tmpBoard.spaceBelowTetromino(true) == true)
 			{
 				index++;
 				clockWiseStep(tmpBoard);
@@ -225,7 +225,7 @@ void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 	//we will create a move to the left until we reach a column
 	if (minXVal > col)
 	{
-		while ((minXVal > col) && (tmpBoard.spaceBelowTetromino() == true))
+		while ((minXVal > col) && (tmpBoard.spaceBelowTetromino(true) == true))
 		{
 			leftStep(tmpBoard);
 			tmpMove.setCurrentStep(index, C_LEFT);
@@ -239,7 +239,7 @@ void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 	//we will create a move to the right until we reach a column
 	else if (minXVal < col)
 	{
-		while ((minXVal < col) && (tmpBoard.spaceBelowTetromino() == true))
+		while ((minXVal < col) && (tmpBoard.spaceBelowTetromino(true) == true))
 		{
 			rightStep(tmpBoard);
 			tmpMove.setCurrentStep(index, C_RIGHT);
@@ -361,9 +361,9 @@ char ComputerPlayer::updateKeysForPlayer2(char res)
 	}
 }
 
-void ComputerPlayer::getKeyAndPerformAction(int player)
+void ComputerPlayer::getKeyAndPerformAction(int player, char keyPressed)
 {
-	char keyPressed = move.getCurrentStep();
+	keyPressed = move.getCurrentStep();
 	move.setStep(move.getStep() + 1);
 	if (player == PLAYER2)
 	{
@@ -394,7 +394,7 @@ void ComputerPlayer::rightStep(Board& tmpBoard)
 
 void ComputerPlayer::moveDown(Board& tmpBoard, Move& curMove, int index)
 {
-	while (tmpBoard.spaceBelowTetromino())
+	while (tmpBoard.spaceBelowTetromino(true))
 	{
 		tmpBoard.printTetromino();
 		tmpBoard.moveTetrominoDown();
@@ -437,7 +437,7 @@ void ComputerPlayer::createMissMove()
 	Board tmpBoard = board;
 	move.setStep(0);
 	int index = 0;
-	while (tmpBoard.spaceBelowTetromino() == true)
+	while (tmpBoard.spaceBelowTetromino(true) == true)
 	{
 		int num = (rand() % 2 + 1);
 

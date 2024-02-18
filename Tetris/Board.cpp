@@ -124,7 +124,7 @@ void Board::addTetromino() {
 }
 
 //not const
-bool Board::spaceBelowTetromino() {
+bool Board::spaceBelowTetromino(bool isComputerCheck) {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
 	size_t numOfCordinates = currentTetromino.getVecSize();
@@ -138,7 +138,7 @@ bool Board::spaceBelowTetromino() {
 		// If the tetromino is a bomb, explode it
 		if (gameBoard[y + 1][x] != EMPTY_CHAR && !currentTetromino.isContainCoordinates(y + 1, x)) {
 			//Check if the tetromino was a bomb. if it is, explode it.
-			if (isCurrentShapeBomb())
+			if (isCurrentShapeBomb() && !isComputerCheck)
 				explodeBomb();
 			currentTetromino.setIsMoving(false);
 			return false;
@@ -330,7 +330,7 @@ void Board::dropTetromino() {
 	int y = DEFAULT_VALUE;
 	size_t numOfCoordinates = currentTetromino.getVecSize();
 
-	while (spaceBelowTetromino()) {
+	while (spaceBelowTetromino(false)) {
 		// Drop tetromino
 		for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++) {
 			y = currentTetromino.getYCoordinate(i);
@@ -720,7 +720,8 @@ size_t Board::getCurrentTetrominoVecSize() const {
 	return this->currentTetromino.getVecSize();
 }
 
-bool Board::isInBoard(int x, int y) const{
+bool Board::isInBoard(int x, int y) const
+{
 	if (x < ONE || x > GameConfig::GAME_WIDTH - 2)
 		return false;
 	if (y < ONE || y > GameConfig::GAME_HEIGHT - 2)

@@ -7,7 +7,7 @@ class Point
 	int yValue;
 public:
 	//empty c-tor for a Point object
-	Point(int x = 0, int y = 0) { x = xValue; y = yValue; }
+	Point(int x = 0, int y = 0) : xValue(x), yValue(y) { x = xValue; y = yValue; }
 
 	// Set Methods
 	void setXYValues(int xValue, int yValue);
@@ -19,7 +19,7 @@ public:
 	int getY() const;
 
 	// This method checks if the point's x and y equals to the given x and y
-	bool isEqual(int xValue, int yValue)const;
+	bool isEqual(int xValue, int yValue) const;
 };
 
 #endif

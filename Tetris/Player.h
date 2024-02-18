@@ -13,15 +13,13 @@ public:
 	// Get Board method can't be const because we make changes to its byRef return value
 	Board& getBoard();
 
-	// This function is only 
-	virtual void setMove() {}
+	// This method sets a move only for computer player
+	virtual void setMove() {};
 
-	//This method returns the key of the computer's move at a given moment
-	virtual void getKeyAndPerformAction(int player) {}
-
-	//setMetod
+	// This method sets up the level of 
 	virtual void setLevel(int level) {};
 
+	// This method gets a key and performs the right action
 	virtual void getKeyAndPerformAction(int player, char keyPressed) {};
 };
 

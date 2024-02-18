@@ -9,7 +9,7 @@ class TetrisGame
 {
 	vector<Player*> playersArr = { nullptr, nullptr };
 	bool isGameOn = false;
-	Level gameLevel;
+	Level gameLevel = BEST;
 
 	// This method displays the main menu of the game to the user on the screen
 	char showMenu() const;
@@ -62,6 +62,9 @@ class TetrisGame
 
 	// This method is a utility method of 'game' function, it sets up the vector according to the mode, and initiates the game in the end 
 	void preGame(char mode);
+
+	// This method gets a key pressed and assigns it to the right player. it's a utility function of 'initGame'. returns true if the user asked to pause the game, else otherwise
+	bool getKeyPress(char& keyPressedPlayer1, char& keyPressedPlayer2);
 public:
 	// This is the main method of the game,
 	//from here we control the flow of the game with the help of the menu

@@ -157,8 +157,8 @@ void TetrisGame::showInstructions() const {
 }
 
 void TetrisGame::initGame() {
-	char keyPressed = DEFAULT_VALUE;
-	int playerPressed = DEFAULT_VALUE;
+	char keyPressedPlayer1 = EMPTY_CHAR;
+	char keyPressedPlayer2 = EMPTY_CHAR;
 
 	// Clear console screeng
 	clearScreen();
@@ -170,6 +170,10 @@ void TetrisGame::initGame() {
 	}
 
 	while (true) {
+		// Restart values
+		keyPressedPlayer1 = EMPTY_CHAR;
+		keyPressedPlayer2 = EMPTY_CHAR;
+
 		// Check if one of the tetrominos is not moving or none of the players has lost and act accordingly. 
 		updateScoresRemoveLinesAddTetromino();
 
@@ -182,28 +186,13 @@ void TetrisGame::initGame() {
 		// Move tetrominos down if there is space below them
 		moveTetrominosDown();
 
-	   // Check for key press and navigate to the right function
-		if (_kbhit())
-		{
-			char keyPressed;
-			// Get key pressed
-			keyPressed = _getch();
+	   // Check for key press and assign the key pressed to the right player. if user pressed escape, but game will pause
+		if (getKeyPress(keyPressedPlayer1, keyPressedPlayer2))
+			return;
 
-			// If player pressed escape, we shall return to the main menu.
-			if (keyPressed == ESC)
-				return ;
-
-			int playerPressed = whoPressed(keyPressed);
-
-			if (playerPressed == PLAYER1)
-				playersArr[PLAYER1]->getKeyAndPerformAction(PLAYER1, keyPressed);
-			else
-				playersArr[PLAYER2]->getKeyAndPerformAction(PLAYER2, keyPressed);
-		}
-
-		// Computer player makes a move
-		playersArr[PLAYER1]->getKeyAndPerformAction(PLAYER1);
-		playersArr[PLAYER2]->getKeyAndPerformAction(PLAYER2);
+		// Make a move!
+		playersArr[PLAYER1]->getKeyAndPerformAction(PLAYER1, keyPressedPlayer1);
+		playersArr[PLAYER2]->getKeyAndPerformAction(PLAYER2, keyPressedPlayer2);
 
 		// Check if one of the players lost and if so end the game
 		if (isLost())
@@ -344,8 +333,8 @@ void TetrisGame::setupAndPrintBoards() {
 }
 
 void TetrisGame::isSpaceBelowTetrominos() {
-	playersArr[PLAYER1]->getBoard().spaceBelowTetromino();
-	playersArr[PLAYER2]->getBoard().spaceBelowTetromino();
+	playersArr[PLAYER1]->getBoard().spaceBelowTetromino(false);
+	playersArr[PLAYER2]->getBoard().spaceBelowTetromino(false);
 }
 
 void TetrisGame::moveTetrominosDown() {
@@ -484,4 +473,27 @@ void TetrisGame::preGame(char mode) {
 
 	// Begin game!
 	initGame();
+}
+
+bool TetrisGame::getKeyPress(char& keyPressedPlayer1, char& keyPressedPlayer2) {
+	char keyPressed;
+
+	if (_kbhit())
+	{
+		// Get key pressed
+		keyPressed = _getch();
+
+		// If player pressed escape, we shall return to the main menu.
+		if (keyPressed == ESC)
+			return true;
+
+		int playerPressed = whoPressed(keyPressed);
+
+		if (playerPressed == PLAYER1)
+			keyPressedPlayer1 = keyPressed;
+		else
+			keyPressedPlayer2 = keyPressed;
+	}
+
+	return false;
 }
