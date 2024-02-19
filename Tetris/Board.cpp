@@ -33,12 +33,11 @@ Board::Board()
 	// The board will be initialized to be an "empty board".
 	//The background color of the board will be reset entirely to black.
 	initBoard();
-	score = 0;
+	score = DEFAULT_VALUE;
 	backgroundColor = GameConfig::COLORS[0];
 	isColor = false;
 }
 
-//not const
 void Board::initBoard() {
 
 	// set the colors matrix to black
@@ -56,7 +55,6 @@ void Board::initBoard() {
 	}
 }
 
-//not const
 void Board::addTetromino() {
 	// Add coordinates value to tetromino
 	currentTetromino.setIsMoving(true);
@@ -123,7 +121,6 @@ void Board::addTetromino() {
 	currentTetromino.setIsMoving(true);
 }
 
-//not const
 bool Board::spaceBelowTetromino(bool isComputerCheck) {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
@@ -147,7 +144,6 @@ bool Board::spaceBelowTetromino(bool isComputerCheck) {
 	return true;
 }
 
-//not const
 void Board::performAction(char keyPressed, int playerNumber) {
 	if (playerNumber == PLAYER1)
 	{
@@ -249,7 +245,6 @@ bool Board::isTetrominoMoving() const {
 	return currentTetromino.getIsMoving();
 }
 
-//FORNOW - changes for the boom !!
 void Board::turnTetrominoLeftOrRight(int num) {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
@@ -279,7 +274,6 @@ void Board::turnTetrominoLeftOrRight(int num) {
 	}
 }
 
-//not const
 void Board::turnTetrominoClockwise(int num) {
 	// Don't perform function for squared shape or bomb
 	int shape = currentTetromino.getShape();
@@ -341,7 +335,6 @@ void Board::dropTetromino() {
 		printTetromino();
 }
 
-//not const
 void Board::clearBlocks() {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
@@ -358,7 +351,7 @@ void Board::clearBlocks() {
 		updateColorByLocation(y, x, GameConfig::COLORS[0]);
 	}
 }
-//not const
+
 void Board::removeFullLines() {
 	for (int y = DEFAULT_VALUE + 1; y < GameConfig::GAME_HEIGHT - 1; y++) {
 		// If a line is full and no tetromino is moving, delete the line
@@ -378,7 +371,7 @@ bool Board::isLineFull(int y) const {
 
 	return true;
 }
-//not const
+
 void Board::makeLineEmpty(int y) {
 	for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
 		if (gameBoard[y][x] != GameConfig::BOARD_BORDER_CHAR) {
@@ -389,7 +382,7 @@ void Board::makeLineEmpty(int y) {
 
 	}
 }
-//not const
+
 void Board::moveTetrominoDown() {
 	int x = DEFAULT_VALUE;
 	int y = DEFAULT_VALUE;
@@ -418,7 +411,7 @@ void Board::moveTetrominoDown() {
 		updateColorByLocation(y + 1, x, getBackgroundColor());
 	}
 }
-// not const
+
 void Board::printTetromino() {
 	// Add tetromino to board
 	int x = DEFAULT_VALUE;
@@ -434,7 +427,8 @@ void Board::printTetromino() {
 		colorByLocation[y][x] = backGroundColor;
 	}
 }
-//not const
+
+
 void Board::moveEverythingDown(int y) {
 	for (y = y - 1; y > 1; y--) {
 		for (int x = DEFAULT_VALUE; x < GameConfig::GAME_WIDTH; x++) {
@@ -456,7 +450,7 @@ bool Board::isPlayerLost() const
 {
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_WIDTH; i++)
 	{
-		// if there is a TETROMINO_CHAR in the in the highest row of the board it's means that the player lost.
+		// if there is a TETROMINO_CHAR in the in the highest row of the board it means that the player has lost.
 		if (gameBoard[1][i] == GameConfig::TETROMINO_CHAR && !currentTetromino.getIsMoving())
 		{
 			return true;
@@ -465,7 +459,7 @@ bool Board::isPlayerLost() const
 	return false;
 }
 
-//notconst
+
 void Board::setScores()
 {
 	//set score to zero.
@@ -477,7 +471,7 @@ int Board::getScore() const
 	return score;
 }
 
-//not const
+
 void Board::updateScoreOfPlayer(int num)
 {
 	score += num;
@@ -522,7 +516,7 @@ void Board::setupAllAndPrintBoard(int x, int y) {
 	}
 }
 
-//not const
+
 void Board::initColorByLocation()
 {
 	for (int i = DEFAULT_VALUE; i < GameConfig::GAME_HEIGHT; i++)
@@ -532,12 +526,12 @@ void Board::initColorByLocation()
 		}
 	}
 }
-//not const
+
 void Board::updateColorByLocation(int x, int y, int color)
 {
 	colorByLocation[x][y] = color;
 }
-//not const
+
 void Board::setBackgroundColor(int color)
 {
 	backgroundColor = color;
@@ -580,12 +574,10 @@ void Board::printBoardWithoutColors(int x, int y) const
 		cout << endl;
 	}
 }
-//not const
+
 void Board::setIsColor(bool isColor) {
 	this->isColor = isColor;
 }
-
-///**************************************************************************yarden
 
 int Board::getNumOfSpaceInLine(int line) const
 {
@@ -625,8 +617,6 @@ int Board::numOfExplodedCubs() const
 	return numOfExplodedCubs;
 }
 
-
-//*****************************************************************new function for bomb from Tal
 
 bool Board::isBomb() const {
 	int num = (rand() % 100 + 1);

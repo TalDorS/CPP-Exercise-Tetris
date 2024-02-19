@@ -27,8 +27,6 @@
 #define NUM_OF_ROWS 4
 #define FIRST_APPEARANCE 0
 
-
-
 Board& ComputerPlayer::getBoard() {
 	return this->board;
 }
@@ -39,7 +37,7 @@ void ComputerPlayer::setMove()
 	move.initMove(); 
 
 	//if the computer is not in level BEST he has some miss move acording to is level.
-	if (level != BEST)
+	if ((int)level != BEST)
 	{    
 		if (isMissMove())
 		{
@@ -209,7 +207,7 @@ int ComputerPlayer::getNumOfMutations() const
 void ComputerPlayer::createFirstsStepByTheShape(int i, Move& tmpMove, Board& tmpBoard)
 {
 	int step = 0;
-	tmpMove.setStep(0);// make share we are in move[0]
+	tmpMove.setStep(0);// make sure we are in move[0]
 
 	if (tmpBoard.spaceBelowTetromino(true) == true)
 	{
@@ -399,7 +397,7 @@ char ComputerPlayer::updateKeysForPlayer2(char res)
 	case C_DROP:
 		return 'm';
 		break;
-	default: // means that res doesn't need to be change
+	default: // means that res doesn't need to be changed
 		return res;
 		break;
 	}
@@ -493,8 +491,8 @@ void ComputerPlayer::setIsLineFull_Rows_setSpaceInRows(Board& tmpBoard, Move& tm
 
 bool ComputerPlayer::isMissMove() const
 {
-	int num = (rand() % level + 1);
-	if (num == level)
+	int num = (rand() % (int)level + 1);
+	if (num == (int)level)
 	{
 		return true;
 	}

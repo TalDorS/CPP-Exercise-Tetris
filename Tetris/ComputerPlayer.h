@@ -9,8 +9,10 @@
 
 class ComputerPlayer : public Player
 {
+	enum class Level { BEST = 0, NOVICE = 10, GOOD = 40 };
+
 	Move move; // move contains the best move the computer can make and data that can help it decide which of the moves is the best.
-	int level = 0; //  the level of the computer
+	Level level; //  the level of the computer
 
 	//This method creates the best fit move for a type shape Tetromino.
 	void createMove();
@@ -66,7 +68,7 @@ class ComputerPlayer : public Player
 	void createMissMove();
 
 	//get method
-	int getLevel() const { return level; }
+	Level getLevel() const { return this->level; }
 
 	// this Method set the number of cuns that exploded in the and of bomb move
 	void setnumOfExplodedCubs(Board& curBoard, Move& curMove);
@@ -77,20 +79,17 @@ class ComputerPlayer : public Player
 	//This method compares two moves of tetromino and updates the best move of the two
 	void chooseMoveForTetromino(Move& tmpMove);
 
-
-public:
-
-	Board& getBoard();
-
 	//setMetod
-	void setLevel(int level) { this->level = (int)level; }
+	void setLevel(int level) { this->level = (Level)level; }
 
 	//This method creating the computer's move according to the board and the Tetromino shape or the bomb
 	void setMove();
 
 	//This method returns the key of the computer's move at a given moment
 	void getKeyAndPerformAction(int player, char keyPressed);
-
+public:
+	// Returns the board
+	Board& getBoard();
 };
 
 #endif

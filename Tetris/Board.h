@@ -49,22 +49,35 @@ class Board
 
 	// This method returns if a given coordinate is in the board
 	bool isInBoard(int x, int y) const;
+
+	// This method sets the background color
+	void setBackgroundColor(int color);
+	
+	// This method gets the background color
+	int getBackgroundColor() const;
+
+	// This method drops the tetromino
+	void dropTetromino();
+
+	// This method gets a random number between 1 and 100, and if its between 95 to 100, it returns true
+	bool isBomb() const;
+
+	// This method explodes the bomb tetromino
+	void explodeBomb();
+
+	// This function moves all of the points above a certain point down, untill the point above it hits empty char or border
+	void moveAboveDown(int x, int y);
 public:
 	//empty c-tor for a Board object 
 	Board();
 
-
 	//set Methods
 	void setScores();
 	void setIsColor(bool isColor);
-	void setBackgroundColor(int color);
-
 
 	//get Methods
-	int getBackgroundColor() const;
 	int getScore() const;
 	size_t getCurrentTetrominoVecSize() const;
-
 
 	// This method initalizes a board, with a border and empty interior
 	void initBoard();
@@ -84,7 +97,7 @@ public:
 	// This method returns the isMoving variable in its current tetromino
 	bool isTetrominoMoving() const;
 
-	// This method checks if there is space below the tetromino while it's going down
+	// This method checks if there is space below the tetromino while it's going down. if it's a bomb and there is no space, explode it.
 	bool spaceBelowTetromino(bool isComputerCheck);
 
 	// This method gets the current tetromino
@@ -108,13 +121,9 @@ public:
 	// Tetromino movement methods
 	void turnTetrominoLeftOrRight(int direction);
 	void turnTetrominoClockwise(int num);
-	void dropTetromino();
 
 	// This method checks if a line is full
 	bool isLineFull(int y) const;
-
-
-	//******************************************************yarden - new methos
 
 	//This method receives a row number and returns the current number of spaces in the row
 	int getNumOfSpaceInLine(int line) const;
@@ -122,19 +131,8 @@ public:
 	//This method returns the number of cubes that are going to explode at the end of a certain move of a bomb
 	int numOfExplodedCubs() const;
 
-	//*****************************************************************new function for bomb from Tal
-
-	// This method gets a random number between 1 and 100, and if its between 95 to 100, it returns true
-	bool isBomb() const;
-
 	// This method checks if the current tetromino is a bomb
 	bool isCurrentShapeBomb() const;
-
-	// This method explodes the bomb tetromino
-	void explodeBomb();
-
-	// This function moves all of the points above a certain point down, untill the point above it hits empty char or border
-	void moveAboveDown(int x, int y);
 
 	// This method prints the board and all its contents
 	// ** NOT CONSTANT BECAUSE IT CHANGES THINGS **

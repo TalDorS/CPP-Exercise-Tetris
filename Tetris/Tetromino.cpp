@@ -62,7 +62,6 @@ void Tetromino::setYCoordinate(int index, int y) {
 	points[index].setYValue(y);
 }
 
-//****************************************** new function of Tal for the bomb
 
 void Tetromino::setPointsArraySize(const size_t size) {
 	points.resize(size);

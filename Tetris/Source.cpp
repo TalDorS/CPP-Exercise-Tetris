@@ -5,8 +5,6 @@
 
 
 int main() {
-
-
 	// Start Game
 	TetrisGame().game();
 }

@@ -3,13 +3,11 @@
 
 #include "Player.h"
 
-enum Level { BEST = 0, NOVICE = 10, GOOD = 40};
-
 class TetrisGame
 {
+	// Freed on tetris game's dtor
 	vector<Player*> playersArr = { nullptr, nullptr };
 	bool isGameOn = false;
-	Level gameLevel = BEST;
 
 	// This method displays the main menu of the game to the user on the screen
 	char showMenu() const;
@@ -51,11 +49,8 @@ class TetrisGame
 	// This method checks if any player lost
 	bool isLost();
 
-	// This is a set function of the game level
-	void setLevel(int level);
-
 	// This function gets a computer level from the user
-	void chooseComputerLevel();
+	void chooseComputerLevel(int numOfComputerPlayers);
 
 	// This method is a utility method of 'endGame', it prints the winner of the game according to the game's outcome
 	void printWinner();
@@ -70,11 +65,14 @@ public:
 	//from here we control the flow of the game with the help of the menu
 	void game();
 
-	// Enable empty constructor
+	// empty constructor
 	TetrisGame() {}
 
 	// Delete copy constructor
 	TetrisGame(const TetrisGame&) = delete;
+
+	// Delete operator =
+	TetrisGame& operator=(const TetrisGame& s) = delete;
 
 	// Dtor
 	~TetrisGame() {	makeEmptyVector(this->playersArr); }

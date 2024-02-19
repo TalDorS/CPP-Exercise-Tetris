@@ -7,7 +7,7 @@
 
 #define DEFAULT_VALUE 0
 
-using namespace std;
+using std::vector;
 
 class Tetromino
 {
@@ -18,6 +18,7 @@ class Tetromino
 public:
 	//here will be default empty c-tor for a Tetromino object by the compiler
 	Tetromino() = default;
+
 	// Set Methods
 	void setXCoordinates(int x1, int x2, int x3, int x4);
 	void setXCoordinate(int index, int x);
@@ -34,11 +35,11 @@ public:
 
 	// This method checks if both x and y coordinate is in its arrays
 	bool isContainCoordinates(int x, int y) const;
-
-
-	//****************************************** new function of Tal for the bomb
+	
+	// This function changes the size of points array
 	void setPointsArraySize(const size_t size);
 
+	// This function returns the size of points vector
 	size_t getVecSize() const;
 
 };

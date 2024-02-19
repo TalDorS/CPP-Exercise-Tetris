@@ -37,6 +37,8 @@
 #define BEST 0
 #define GOOD 40
 #define NOVICE 10
+#define TWO_COMPUTERS 2
+#define ONE_COMPUTER 1
 
 using namespace std;
 
@@ -44,7 +46,7 @@ void TetrisGame::game() {
 	char keyPressed = DEFAULT_VALUE;
 
 	// Utility function for rand function
-	srand(time(0));
+	srand(time(DEFAULT_VALUE));
 
 	// Disable cursor Method
 	showConsoleCursor(false);
@@ -283,7 +285,7 @@ void TetrisGame::initBoards() {
 		currBoard.addTetromino();
 
 		//COMPUTER
-		currPlayer->setLevel(this->gameLevel);
+		//currPlayer->setLevel(this->gameLevel);
 		currPlayer->setMove();
 	}
 }
@@ -352,58 +354,90 @@ bool TetrisGame::isLost() {
 	return false;
 }
 
-void TetrisGame::chooseComputerLevel() {
+void TetrisGame::chooseComputerLevel(int numOfComputerPlayers) {
 	char keyPressed = DEFAULT_VALUE;
+	bool condition = true;
 
 	clearScreen();
 
-	std::cout << "******************************" << std::endl;
-	std::cout << "*        TETRIS GAME         *" << std::endl;
-	std::cout << "******************************" << std::endl;
 
-	// Present menu to user
-	cout << "Please select the computer's difficulty!" << endl;
-	cout << "(a) BEST" << endl;
-	cout << "(b) GOOD" << endl;
-	cout << "(c) NOVICE" << endl;
+	for (int i = DEFAULT_VALUE; i < numOfComputerPlayers; i++) {
+		condition = true;
 
-	while (true)
-	{
-		if (_kbhit()) {
-			keyPressed = getKeyFromUser();
+		std::cout << "******************************" << std::endl;
+		std::cout << "*        TETRIS GAME         *" << std::endl;
+		std::cout << "******************************" << std::endl;
 
-			switch (keyPressed)
-			{
-			// Best level
-			case 'a':
-				setLevel(BEST);
-				return;
-			case 'A':
-				setLevel(BEST);
-				return;
-				// Best level
-			case 'b':
-				setLevel(GOOD);
-				return;
-			case 'B':
-				setLevel(GOOD);
-				return;
-				// Best level
-			case 'c':
-				setLevel(NOVICE);
-				return;
-			case 'C':
-				setLevel(NOVICE);
-				return;
-			default:
-				break;
+		// Present menu to user
+		if(numOfComputerPlayers == ONE)
+			cout << "Please select computer's difficulty!" << endl;
+		if (numOfComputerPlayers == TWO)
+			cout << "Please select computer " << i + ONE << "'s difficulty!" << endl;
+		cout << "(a) BEST" << endl;
+		cout << "(b) GOOD" << endl;
+		cout << "(c) NOVICE" << endl;
+
+		while (condition)
+		{
+			if (_kbhit()) {
+				keyPressed = getKeyFromUser();
+
+				switch (keyPressed)
+				{
+					// Best level
+				case 'a':
+					if (numOfComputerPlayers == ONE)
+						playersArr[PLAYER2]->setLevel(BEST);
+					if (numOfComputerPlayers == TWO)
+						playersArr[i]->setLevel(BEST);
+					condition = false;
+					break;
+				case 'A':
+					if (numOfComputerPlayers == ONE)
+						playersArr[PLAYER2]->setLevel(BEST);
+					if (numOfComputerPlayers == TWO)
+						playersArr[i]->setLevel(BEST);
+					condition = false;
+					break;
+					// Best level
+				case 'b':
+					if (numOfComputerPlayers == ONE)
+						playersArr[PLAYER2]->setLevel(GOOD);
+					if (numOfComputerPlayers == TWO)
+						playersArr[i]->setLevel(GOOD);
+					condition = false;
+					break;
+				case 'B':
+					if (numOfComputerPlayers == ONE)
+						playersArr[PLAYER2]->setLevel(GOOD);
+					if (numOfComputerPlayers == TWO)
+						playersArr[i]->setLevel(GOOD);
+					condition = false;
+					break;
+					// Best level
+				case 'c':
+					if (numOfComputerPlayers == ONE)
+						playersArr[PLAYER2]->setLevel(NOVICE);
+					if (numOfComputerPlayers == TWO)
+						playersArr[i]->setLevel(NOVICE);
+					condition = false;
+					break;
+				case 'C':
+					if (numOfComputerPlayers == ONE)
+						playersArr[PLAYER2]->setLevel(NOVICE);
+					if (numOfComputerPlayers == TWO)
+						playersArr[i]->setLevel(NOVICE);
+					condition = false;
+					break;
+				default:
+					break;
+				}
 			}
 		}
-	}
-}
 
-void TetrisGame::setLevel(int level) {
-	this->gameLevel = (Level)level;
+		clearScreen();
+	}
+
 }
 
 void TetrisGame::printWinner() {
@@ -468,8 +502,10 @@ void TetrisGame::preGame(char mode) {
 	}
 
 	// Get difficulty from user
-	if(mode != START_GAME_HVH)
-		chooseComputerLevel();
+	if(mode == START_GAME_CVC)
+		chooseComputerLevel(TWO_COMPUTERS);
+	else if(mode == START_GAME_HVC)
+		chooseComputerLevel(ONE_COMPUTER);
 
 	// Begin game!
 	initGame();
