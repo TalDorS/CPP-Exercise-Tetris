@@ -36,10 +36,11 @@ void ComputerPlayer::setMove()
 	//make empty move
 	move.initMove(); 
 
-	//if the computer is not in level BEST he has some miss move acording to is level.
+	//if the computer is not in level BEST he has some miss move according to is level.
 	if ((int)level != BEST)
 	{    
-		if (isMissMove())
+		// if its time to miss move or if the shape is bomb we need to create a miss move
+		if (isMissMove() || board.isCurrentShapeBomb())
 		{
 			createMissMove();
 			return;
