@@ -19,77 +19,82 @@
 #define GOOD 40
 #define NOVICE 10
 #define MIN_COL 1
+#define FIRST_COL 1
 #define SIZE_OF_TETROMINO 4
+#define SIZE_OF_ROWS 4
+#define FIRST_STEP 0
+#define FIRST_INDEX 0
+#define NUM_OF_ROWS 4
+#define FIRST_APPEARANCE 0
+
 
 
 Board& ComputerPlayer::getBoard() {
 	return this->board;
 }
 
-void ComputerPlayer::setupBoard(bool isColor) {
-	// Initialize board colors
-	this->board.setIsColor(isColor);
-
-	// Initialize boards
-	this->board.initBoard();
-
-	// Set player's score to zero
-	this->board.setScores();
-
-	//Add a new tetromino shape to the board
-	this->board.addTetromino();
-
-	// ***********************************yarden
-	this->setMove();
-}
-
 void ComputerPlayer::setMove()
 {
 	//make empty move
-	move.setStep(0);
-	move.initMove();
+	move.initMove(); 
 
-	//if the computer is not in level BEST	
+	//if the computer is not in level BEST he has some miss move acording to is level.
 	if (level != BEST)
-	{
+	{    
 		if (isMissMove())
 		{
 			createMissMove();
-			move.setStep(0);
 			return;
 		}
-
 	}
+	// if level == BEST or it's not a miss move create the right move
 	createMove();
-	move.setStep(0);
 }
 
 void ComputerPlayer::createMove()
 {
+	//first create the first possible move that will be also the difult move
 	createFirstMove();
+
+	//We will create all possible moves in a temporary variable,
+	//and choose the best compare to current chosen move
 	createMovesAndChooseTheBest();
+
+	//make the move to be ready to rum from the first step
+	move.setStep(FIRST_STEP);
 }
 
 void ComputerPlayer::createFirstMove()
 {
+	// copy the board to the tmp board so that all the changes made to it in order to create the move will not be saved in the "real" board
 	Board tmpBoard = board;
 
-	int index = 0;
+	int step = FIRST_STEP;
+
+	// minVal = the lowest the minimum X value among the X values of the shape when it enters the board
 	int minXVal = minX();
+
+	// As long as the minimum X value is not equal to the minimum row in the board (1) a step to the left can be made
 	while ((minXVal != MIN_COL) && (tmpBoard.spaceBelowTetromino(true) == true))
 	{
-		leftStep(tmpBoard);
-		move.setCurrentStep(index, C_LEFT);
-		index++;
+		//Taking a step to the left 
+		leftStep(tmpBoard, move, step);
+
+		//Update step one step forward
+		step++;
+
+		//Because we did step left ,the minimum X value of the shape is automatically decreased by 1.
 		minXVal--;
 	}
 
-	moveDown(tmpBoard, move, index);
+	//when the shape finished to do steps to the left we will keep do steps down.
+	moveDown(tmpBoard, move, step);
 
+	//if the current shape is is bomb we will update the values that help us choose the best move for the bomb
 	if (board.isCurrentShapeBomb()){
 		setnumOfExplodedCubs(tmpBoard, move);
 	}
-	else {
+	else { //if the current shape is tetromino we will update the values that help us choose the best move for the tetromino
 		setIsLineFull_Rows_setSpaceInRows(tmpBoard, move);
 	}
 
@@ -98,39 +103,48 @@ void ComputerPlayer::createFirstMove()
 void ComputerPlayer::setIsLineFull(Move& move)
 {
 	size_t numOfCoordinates = board.getCurrentTetrominoVecSize();
+
 	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++) {
+		// if one of the row of the tetromino is full in the board
 		if (board.isLineFull(board.getCurrentTetromino().getYCoordinate(i)))
 		{
+			//update data member of move "isLineFull" to be true.
 			move.setIsLineFull(true);
 			return;
 		}
 	}
+	// if none of the full update data member of move "isLineFull" to be false.
 	move.setIsLineFull(false);
 }
 
 void ComputerPlayer::setRows(Board& curBoard, Move& curMove)
 {
 	size_t numOfCoordinates = board.getCurrentTetrominoVecSize();
+
+	// update all the row that the shape contain and update them in the arry
 	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++)
 	{
 		int row = curBoard.getCurrentTetromino().getYCoordinate(i);
 		curMove.setRow(i, row);
 
 	}
+	// sort rows array so the highest line will be first and the lowest line will be last
 	bubbleSort(curMove.getRowsAddress(), numOfCoordinates);
-
-
 }
 
 void ComputerPlayer::setSpaceInRows(Board& curBoard, Move& curMove)
 {
 	size_t numOfCoordinates = board.getCurrentTetrominoVecSize();
+
+	// update the spaces in each row the the shape contain
 	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++)
 	{
+		// get the number of spaces in the row and update it in spaceInRow array
 		int numOfSpaces = curBoard.getNumOfSpaceInLine(curMove.getRow(i));
 		curMove.setSpaceInRow(i, numOfSpaces);
 
-		while (curMove.getRow(i) == curMove.getRow(i + 1) && i < 3)
+		// if num of row equal to the next row the number of spaces equal. (can be only in tetromino shape)
+		while (curMove.getRow(i) == curMove.getRow(i + 1) && i < NUM_OF_ROWS)
 		{
 			curMove.setSpaceInRow(i + 1, numOfSpaces);
 			i++;
@@ -141,19 +155,35 @@ void ComputerPlayer::setSpaceInRows(Board& curBoard, Move& curMove)
 
 void ComputerPlayer::createMovesAndChooseTheBest()
 {
-	// save the next move and compare it to the object's move
+	// save the current next move and compare it to the object's move
+
+	//numOfMutations = number of appearances that one shape can appear on the board
 	int numOfMutations = getNumOfMutations();
-	for (int i = 0; i < numOfMutations; i++)
+
+
+	// for each such performance we will build all the possible moves on the board
+	for (int appearance = FIRST_APPEARANCE; appearance < numOfMutations; appearance++)
 	{
 		//for each col we build a move
-		for (int col = 1; col < GameConfig::GAME_WIDTH - 2; col++)
+		for (int col = FIRST_COL; col < GameConfig::GAME_WIDTH - 2; col++)
 		{
+			// create tmp move so the current move will not change
 			Move tmpMove;
+
+			// copy the board to the tmp board so that all the changes made to it in order to create the move will not be saved in the "real" board
 			Board tmpBoard = board;
-			tmpMove.setStep(0);// make share we are in move[0]
-			tmpMove.initMove(); // make share the move is empty
-			createFirstsStepByTheShape(i, tmpMove, tmpBoard);
+
+			// make share the move is empty
+			tmpMove.initMove(); 
+
+			//if it's a move if a shape that can do a clockwise step ans change is performance
+			// so according to index "i" we will update the step that need to be done to "change" the performance of the shape
+			createFirstsStepByTheShape(appearance, tmpMove, tmpBoard);
+			
+			//create the next move according the current col;
 			createTheNextSteps(col, tmpMove, tmpBoard);
+			
+			// after we create tmpMove if he better move that the current move make the tmpMove to be the move
 			chooseTheBestMove(tmpMove);
 
 		}
@@ -162,11 +192,11 @@ void ComputerPlayer::createMovesAndChooseTheBest()
 
 int ComputerPlayer::getNumOfMutations() const
 {
-	if (board.getCurrentTetromino().getShape() == 2 || board.getCurrentTetromino().getShape() == 8)
+	if (board.getCurrentTetromino().getShape() == (int)GameConfig::eShapes::Square || board.getCurrentTetromino().getShape() == (int)GameConfig::eShapes::Bomb)
 	{
 		return 1;
 	}
-	else if (board.getCurrentTetromino().getShape() == 1 || board.getCurrentTetromino().getShape() == 5 || board.getCurrentTetromino().getShape() == 7)
+	else if (board.getCurrentTetromino().getShape() == (int)GameConfig::eShapes::Straight || board.getCurrentTetromino().getShape() == (int)GameConfig::eShapes::SShaped || board.getCurrentTetromino().getShape() == (int)GameConfig::eShapes::ZShaped)
 	{
 		return 2;
 	}
@@ -178,8 +208,7 @@ int ComputerPlayer::getNumOfMutations() const
 
 void ComputerPlayer::createFirstsStepByTheShape(int i, Move& tmpMove, Board& tmpBoard)
 {
-	int index = 0;
-	tmpBoard.printTetromino();
+	int step = 0;
 	tmpMove.setStep(0);// make share we are in move[0]
 
 	if (tmpBoard.spaceBelowTetromino(true) == true)
@@ -188,28 +217,24 @@ void ComputerPlayer::createFirstsStepByTheShape(int i, Move& tmpMove, Board& tmp
 		{
 		case (1):
 			//first step - one time CLOCKWISE
-			clockWiseStep(tmpBoard);
-			tmpMove.setCurrentStep(index, C_CLOCKWISE);
-			tmpMove.setStep(index + 1);
+			clockWiseStep(tmpBoard,tmpMove,step);
+			tmpMove.setStep(step + 1);
 			break;
 		case (2):
 			//first two step - twice CLOCKWISE
-			clockWiseStep(tmpBoard);
-			tmpMove.setCurrentStep(index, C_CLOCKWISE);
-			tmpMove.setStep(index + 1);
+			clockWiseStep(tmpBoard, tmpMove, step);
+			tmpMove.setStep(step + 1);
 			if (tmpBoard.spaceBelowTetromino(true) == true)
 			{
-				index++;
-				clockWiseStep(tmpBoard);
-				tmpMove.setCurrentStep(index, C_CLOCKWISE);
-				tmpMove.setStep(index + 1);
+				step++;
+				clockWiseStep(tmpBoard, tmpMove, step);
+				tmpMove.setStep(step + 1);
 			}
 			break;
 		case (3):
 			//first step - one time COUNTERCLOCKWISE
-			counterClockWiseStep(tmpBoard);
-			tmpMove.setCurrentStep(index, C_COUNTERCLOCKWISE);
-			tmpMove.setStep(index + 1);
+			counterClockWiseStep(tmpBoard, tmpMove, step);
+			tmpMove.setStep(step + 1);
 		default:
 			break;
 		}
@@ -218,46 +243,54 @@ void ComputerPlayer::createFirstsStepByTheShape(int i, Move& tmpMove, Board& tmp
 
 void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 {
+	// minXVal = the lowest the minimum X value among the X values of the shape when it enters the board
 	int minXVal = minX();
-	int index = tmpMove.getStep();
+
+	// because the first steps could be alrey done we wont to get the current step
+	int step = tmpMove.getStep();
 
 	//If the col number is less than the minimum number of columns of the shape,
-	//we will create a move to the left until we reach a column
 	if (minXVal > col)
 	{
+		//we will create a move to the left until we reach a column
 		while ((minXVal > col) && (tmpBoard.spaceBelowTetromino(true) == true))
 		{
-			leftStep(tmpBoard);
-			tmpMove.setCurrentStep(index, C_LEFT);
-			index++;
+			//Taking a step to the left 
+			leftStep(tmpBoard, tmpMove,step);
+			
+			//Update step one step forward
+			step++;
+			
+			//Because we did step left ,the minimum X value of the shape is automatically decreased by 1.
 			minXVal--;
 		}
-		moveDown(tmpBoard,tmpMove,index);
-
+		
 	}
 	// If the number of the column is greater than the minimum number of columns of the shape, 
-	//we will create a move to the right until we reach a column
 	else if (minXVal < col)
 	{
+		//we will create a move to the right until we reach a column
 		while ((minXVal < col) && (tmpBoard.spaceBelowTetromino(true) == true))
 		{
-			rightStep(tmpBoard);
-			tmpMove.setCurrentStep(index, C_RIGHT);
-			index++;
+			//Taking a step to the right
+			rightStep(tmpBoard, tmpMove,step);
+
+			//Update step one step forward
+			step++;
+			//Because we did step right ,the minimum X value of the shape is automatically up by 1.
 			minXVal++;
 		}
-		moveDown(tmpBoard, tmpMove, index);
 	}
-	else // If the column number is equal to the minimum column of the shape DROP is done
-	{
-		moveDown(tmpBoard, tmpMove, index);
-	}
-
+	
+	//when the shape reached the column, we will continue and take steps down until the shape stops.
+	moveDown(tmpBoard, tmpMove, step);
+	
+	//if the current shape is is bomb we will update the values that help us choose the best move for the bomb
 	if (board.isCurrentShapeBomb())
 	{
 		setnumOfExplodedCubs(tmpBoard, tmpMove);
 	}
-	else {
+	else {//if the current shape is tetromino we will update the values that help us choose the best move for the tetromino
 		setIsLineFull_Rows_setSpaceInRows(tmpBoard, tmpMove);
 	}
 }
@@ -265,11 +298,15 @@ void ComputerPlayer::createTheNextSteps(int col, Move& tmpMove, Board& tmpBoard)
 int ComputerPlayer::minX() const
 {
 	size_t numOfCoordinates = board.getCurrentTetrominoVecSize();
-	int res = board.getCurrentTetromino().getXCoordinate(0);
+
+	int res = board.getCurrentTetromino().getXCoordinate(FIRST_INDEX);
+
 	for (int i = DEFAULT_VALUE; i < numOfCoordinates; i++)
 	{
+		//int res > next X value 
 		if (res > board.getCurrentTetromino().getXCoordinate(i))
 		{
+			//update res
 			res = board.getCurrentTetromino().getXCoordinate(i);
 		}
 	}
@@ -279,13 +316,15 @@ int ComputerPlayer::minX() const
 
 void ComputerPlayer::chooseTheBestMove(Move& tmpMove)
 {
-
+	// if the current shape is bomb 
 	if (board.isCurrentShapeBomb())
 	{
+		//compare tmp move to move and choose the best move to the bomb
 		chooseMoveForBomb(tmpMove);
 	}
-	else
+	else // the cuttent shape is tetromino
 	{
+		//compare tmp move to move and choose the best move to the tetromino
 		chooseMoveForTetromino(tmpMove);
 	}
 }
@@ -302,33 +341,37 @@ void ComputerPlayer::chooseMoveForTetromino(Move& tmpMove)
 {
 	// If the tmpmove has a full line and there is not in move, we will update the tmpMove to be the move;
 	if (tmpMove.getIsLineFull() == true && move.getIsLineFull() == false) {
+		//update move to be tmpMove
 		move = tmpMove;
 		return;
 	}
 	else
 	{
-		int i = SIZE_OF_TETROMINO - 1;
-		if (tmpMove.getRow(i) == move.getRow(i))
+		int row = SIZE_OF_ROWS - 1;
+		if (tmpMove.getRow(row) == move.getRow(row))
 		{
-			while (tmpMove.getRow(i) == move.getRow(i) && i >= 0) //Is the lowest row equal?
+			while (tmpMove.getRow(row) == move.getRow(row) && row >= 0) //Is the lowest row equal?
 			{
 				//If the number of the row that the shape occupies is equal, 
 				//the one that causes the row to have less spaces is chosen.
-				if (tmpMove.getSpaceInRow(3) < move.getSpaceInRow(3)) {
+				if (tmpMove.getSpaceInRow(row) < move.getSpaceInRow(row)) {
+					//update move to be tmpMove
 					move = tmpMove;
 					return;
 				}
-				i--;
+				row--;
 			}
 		}
 		else {
 			//Choose the form that causes the formation of as few spaces as possible
 			if (tmpMove.sumOfSpaceInRaws() < move.sumOfSpaceInRaws()) {
+				//update move to be tmpMove
 				move = tmpMove;
 				return;
 			}
 			//If the sum of spaces is equal, we will choose the move that has the minimum number of spaces.
 			else if (tmpMove.minNumOfSpaces() < move.minNumOfSpaces()) {
+				//update move to be tmpMove
 				move = tmpMove;
 				return;
 			}
@@ -356,20 +399,26 @@ char ComputerPlayer::updateKeysForPlayer2(char res)
 	case C_DROP:
 		return 'm';
 		break;
-	default:
+	default: // means that res doesn't need to be change
+		return res;
 		break;
 	}
 }
 
 void ComputerPlayer::getKeyAndPerformAction(int player, char keyPressed)
 {
+	//get the current step from move array
 	keyPressed = move.getCurrentStep();
+	//update the step one step forward
 	move.setStep(move.getStep() + 1);
+	
+	//if the computer is player 2 update the keyPress to the keyPress for player 2
 	if (player == PLAYER2)
 	{
 		keyPressed = updateKeysForPlayer2(keyPressed);
 	}
 
+	//if the shape is not moving preform action
 	if (board.isTetrominoMoving())
 	{
 		board.performAction(keyPressed, player);
@@ -378,45 +427,65 @@ void ComputerPlayer::getKeyAndPerformAction(int player, char keyPressed)
 
 }
 
-void ComputerPlayer::leftStep(Board& tmpBoard)
+void ComputerPlayer::leftStep(Board& tmpBoard, Move& curMove, int step)
 {
+	//Taking a step to the left on our tmpBoard
 	tmpBoard.printTetromino();
 	tmpBoard.moveTetrominoDown();
 	tmpBoard.turnTetrominoLeftOrRight(LEFT);
+	//update the current step to be a left step in move array
+	curMove.setCurrentStep(step, C_LEFT);
+	
 }
 
-void ComputerPlayer::rightStep(Board& tmpBoard)
+void ComputerPlayer::rightStep(Board& tmpBoard, Move& curMove ,int step)
 {
+	//Taking a step to the right on our tmpBoard
 	tmpBoard.printTetromino();
 	tmpBoard.moveTetrominoDown();
 	tmpBoard.turnTetrominoLeftOrRight(RIGHT);
+	//update the current step to ne a right step in move array
+	curMove.setCurrentStep(step, C_RIGHT);
 }
 
-void ComputerPlayer::moveDown(Board& tmpBoard, Move& curMove, int index)
+void ComputerPlayer::moveDown(Board& tmpBoard, Move& curMove, int step)
 {
+	//as long as there is space for the shape to move down we will take a step down
 	while (tmpBoard.spaceBelowTetromino(true))
 	{
 		tmpBoard.printTetromino();
 		tmpBoard.moveTetrominoDown();
-		curMove.setCurrentStep(index, C_MOVE_DOWN);
-		index++;
+		//update the current step to be a move down step in move array
+		curMove.setCurrentStep(step, C_MOVE_DOWN);
+		//Update step one step forward
+		step++;
 	}
 }
 
-void ComputerPlayer::clockWiseStep(Board& tmpBoard)
+void ComputerPlayer::clockWiseStep(Board& tmpBoard, Move &curMove, int step)
 {
+	//Taking a clockwise step on our tmpBoard
+	tmpBoard.printTetromino();
 	tmpBoard.moveTetrominoDown();
 	tmpBoard.turnTetrominoClockwise(CLOCKWISE);
+	//update the current step to be a clockwise step in move array
+	curMove.setCurrentStep(step, C_CLOCKWISE);
+
 }
 
-void ComputerPlayer::counterClockWiseStep(Board& tmpBoard)
+void ComputerPlayer::counterClockWiseStep(Board& tmpBoard, Move& curMove, int step)
 {
+	//Taking a counter clockwise step on our tmpBoard
+	tmpBoard.printTetromino();
 	tmpBoard.moveTetrominoDown();
 	tmpBoard.turnTetrominoClockwise(COUNTERCLOCKWISE);
+	//update the current step to be a counter clockwise step in move array
+	curMove.setCurrentStep(step, C_COUNTERCLOCKWISE);
 }
 
 void ComputerPlayer::setIsLineFull_Rows_setSpaceInRows(Board& tmpBoard, Move& tmpMove)
 {
+	// set all the value that help us to choose the best move for tetromino
 	setIsLineFull(tmpMove);
 	setRows(tmpBoard, tmpMove);
 	setSpaceInRows(tmpBoard, tmpMove);
@@ -435,28 +504,30 @@ bool ComputerPlayer::isMissMove() const
 void ComputerPlayer::createMissMove()
 {
 	Board tmpBoard = board;
-	move.setStep(0);
-	int index = 0;
+	move.initMove();// make emty move
+	int step = FIRST_STEP;
+
 	while (tmpBoard.spaceBelowTetromino(true) == true)
 	{
 		int num = (rand() % 2 + 1);
 
 		if (num == 1)
 		{
-			leftStep(tmpBoard);
-			move.setCurrentStep(index, C_LEFT);
-			index++;
-			move.setStep(index);
+			leftStep(tmpBoard, move,step);
+			//move.setCurrentStep(step, C_LEFT);
+			step++;
+			move.setStep(step);
 		}
 		else
 		{
-			rightStep(tmpBoard);
-			move.setCurrentStep(index, C_RIGHT);
-			index++;
-			move.setStep(index);
+			rightStep(tmpBoard,move,step);
+			//move.setCurrentStep(step, C_RIGHT);
+			step++;
+			move.setStep(step);
 		}
 	}
-	move.setStep(0);
+	//make the move to be ready to rum from the first step
+	move.setStep(FIRST_STEP);
 }
 
 void ComputerPlayer::setnumOfExplodedCubs(Board& curBoard, Move& curMove)
@@ -465,9 +536,3 @@ void ComputerPlayer::setnumOfExplodedCubs(Board& curBoard, Move& curMove)
 	curMove.setnumOfExplodedCubs(numOfExplodedCubs);
 }
 
-//delete in the end
-//void ComputerPlayer::PtintCheck(Board& tmpBoard)
-//{
-//	board.printBoard(GameConfig::FIRST_BOARD_X, GameConfig::FIRST_BOARD_Y);
-//	tmpBoard.printBoard(GameConfig::SECOND_BOARD_X, GameConfig::SECOND_BOARD_Y);
-//}

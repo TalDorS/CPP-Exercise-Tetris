@@ -4,11 +4,21 @@
 #include <string>
 
 using namespace std;
+ 
+#define FIRST_STEP 0 
+#define FIRST_ROW 0
+#define SIZE_0F_ROWS 4
+
+void Move::initMove() 
+{ 
+	move[FIRST_STEP] = '\0'; 
+	setStep(FIRST_STEP);
+}
 
 int Move::sumOfSpaceInRaws() const
 {
-	int res = spaceInRaw[0];
-	for (int i = 1; i < 4; i++)
+	int res = spaceInRaw[FIRST_ROW];
+	for (int i = 1; i < SIZE_0F_ROWS; i++)
 	{
 		res += spaceInRaw[i];
 	}
@@ -17,8 +27,8 @@ int Move::sumOfSpaceInRaws() const
 
 int Move::minNumOfSpaces() const
 {
-	int min = spaceInRaw[0];
-	for (int i = 1; i < 4; i++)
+	int min = spaceInRaw[FIRST_ROW];
+	for (int i = 1; i < SIZE_0F_ROWS; i++)
 	{
 		if (min > spaceInRaw[i])
 			min = spaceInRaw[i];
@@ -31,16 +41,3 @@ int Move::moveLen() const
 {
 	return strlen(move);
 }
-
-//delete in the end
-//void Move::printMove()
-//{
-//
-//	for (int i = 0; i < moveLen(); i++)
-//	{
-//		cout << move[i] << ' ';;
-//	}
-//
-//}
-
-

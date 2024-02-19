@@ -35,8 +35,8 @@ public:
 	char getCurrentStep() const { return move[step]; }
 	int getnumOfExplodedCubs() const { return numOfExplodedCubs; }
 
-
-	void initMove() { move[0] = '\0'; }
+	// this fuction make an empty move
+	void initMove();
 
 	//This method calculates the total of all the values in the array  paceInRaw[4]
 	int sumOfSpaceInRaws() const;
@@ -46,10 +46,6 @@ public:
 
 	//This method calculates the logical size of the string move
 	int moveLen() const; // { return strlen(move); }
-
-	//delete in the end
-	//void printMove();
-	
 
 };
 

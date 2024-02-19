@@ -53,11 +53,11 @@ class ComputerPlayer : public Player
 	char updateKeysForPlayer2(char res);
 
 	// This methods causes the next step to be to the left/right/drop/colocwise/counterClockWise
-	void leftStep(Board& tmpBoard);
-	void rightStep(Board& tmpBoard);
-	void moveDown(Board& tmpBoard ,Move& curMove,int index);
-	void clockWiseStep(Board& tmpBoard);
-	void counterClockWiseStep(Board& tmpBoard);
+	void leftStep(Board& tmpBoard, Move& curMove, int step);
+	void rightStep(Board& tmpBoard, Move& curMove, int step);
+	void moveDown(Board& tmpBoard ,Move& curMove,int step);
+	void clockWiseStep(Board& tmpBoard, Move& curMove, int step);
+	void counterClockWiseStep(Board& tmpBoard, Move& curMove, int step);
 
 	// This method gets a random number between 1 and "level" (10 or 40), and if its equal to the level its mean that new the cumputer need to miss;
 	bool isMissMove() const;
@@ -90,13 +90,6 @@ public:
 
 	//This method returns the key of the computer's move at a given moment
 	void getKeyAndPerformAction(int player, char keyPressed);
-
-	//This method initializes the board data at the beginning of the game
-	//and initializes the first move of the computer
-	void setupBoard(bool isColor);
-
-	// delete this method in the end
-	//void PtintCheck(Board& tmpBoard);
 
 };
 
